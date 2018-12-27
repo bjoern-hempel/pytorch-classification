@@ -1,0 +1,3 @@
+[submodule "vendor/pytorch-examples"]
+	path = vendor/pytorch-examples
+	url = git@github.com:bjoern-hempel/pytorch-examples.git
