@@ -16,7 +16,7 @@ find "$path" -type l |while read sourceFile; do
     fi
 
     # extract class
-    class=$(echo "$sourceFile" | sed -r "s/(.*)train\///")
+    class=$(echo "$sourceFile" | sed -r "s/(.*)(train|val)\///")
     class=$(dirname "$class")
 
     # extract class group
@@ -34,5 +34,9 @@ find "$path" -type l |while read sourceFile; do
     echo "create symlink $sourceFile to $targetFile"
     ln -s "$targetFile" "$sourceFile"
 
-    exit
+    # check if new symlink exists
+    if [ ! -e "$sourceFile" ]; then
+        echo "new symlink does not exist: $sourceFile"
+        exit
+    fi
 done
