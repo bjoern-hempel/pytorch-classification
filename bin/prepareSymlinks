@@ -1,0 +1,38 @@
+#!/bin/bash
+
+sourcePath="data/raw"
+preparedPath="data/prepared"
+path="$preparedPath/$1"
+pathShort="$1"
+
+# quote some chars
+sourcePath=$(echo "$sourcePath" | sed -e 's/\//\\\//g')
+
+find "$path" -type l |while read sourceFile; do
+    # check if symlink exist and cancel
+    if [ -e "$sourceFile" ]; then
+        echo "symlink exists: $sourceFile"
+        continue
+    fi
+
+    # extract class
+    class=$(echo "$sourceFile" | sed -r "s/(.*)train\///")
+    class=$(dirname "$class")
+
+    # extract class group
+    classGroup=$(echo "$pathShort" | sed -r 's/\/(.*)//gi')
+
+    # extract target path
+    targetFile=$(echo "$sourceFile" | sed -e 's/[a-z0-9_]\+\//..\//gi')
+    targetFile=$(echo "$targetFile" | sed -r "s/(.*)\.\./\1..\/$sourcePath\/$classGroup\/$class/")
+
+    # remove symlink
+    echo "remove file $sourceFile"
+    rm "$sourceFile"
+
+    # create new symlink
+    echo "create symlink $sourceFile to $targetFile"
+    ln -s "$targetFile" "$sourceFile"
+
+    exit
+done
