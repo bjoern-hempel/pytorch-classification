@@ -79,14 +79,23 @@ def getData(path_to_csv):
 
             if row[5] == 'train':
                 max_train_accuracy = row[7] if row[7] > max_train_accuracy else max_train_accuracy
-                number_trained += 1
 
             if row[5] == 'val':
                 max_val_accuracy = row[7] if row[7] > max_val_accuracy else max_val_accuracy
+                number_trained += 1
+
+            if len(row) >= 12:
+                if row[5] == 'train':
+                    max_train_accuracy_5 = row[9] if row[9] > max_train_accuracy_5 else max_train_accuracy_5
+
+                if row[5] == 'val':
+                    max_val_accuracy_5 = row[9] if row[9] > max_val_accuracy_5 else max_val_accuracy_5
 
     data['time_taken'] = time_taken
     data['max_train_accuracy'] = max_train_accuracy
     data['max_val_accuracy'] = max_val_accuracy
+    data['max_train_accuracy_5'] = max_train_accuracy_5
+    data['max_val_accuracy_5'] = max_val_accuracy_5
     data['number_trained'] = number_trained
 
     return data

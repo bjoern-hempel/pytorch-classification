@@ -55,7 +55,7 @@ def print_data(fields, point_of_interest, data, counter):
     print(
         '| {acc:5.2f}% | {acc5:5.2f}% | {arch:>13} | {epochs:2d} | {trained:2d} | {batch_size:2d} | {timeFormated} | {time:5.0f} | {model_size:7.2f} MB | {device:<7} | {settings_name:<60} |'.format(
             acc=data['max_val_accuracy'],
-            acc5=0,
+            acc5=data['max_val_accuracy_5'],
             arch=data['arch'],
             epochs=data['epochs'],
             trained=data['number_trained'],
