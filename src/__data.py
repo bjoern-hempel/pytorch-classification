@@ -105,7 +105,7 @@ def getDatasSortedBy(path, sortedBy='max_val_accuracy'):
 
     return datas
 
-def getDataGroupedByPointOfInterest(datas, point_of_interest=None):
+def getDataGroupedByPointOfInterest(datas, fields, point_of_interest=None):
     data_grouped = {}
 
     if point_of_interest == None:

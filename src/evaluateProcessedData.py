@@ -26,7 +26,7 @@ pp = pprint.PrettyPrinter(indent=4)
 check_point_of_interest(fields, point_of_interest)
 
 # get datas and group them
-datas_grouped = getDataGroupedByPointOfInterest(getDatasSortedBy(path), point_of_interest)
+datas_grouped = getDataGroupedByPointOfInterest(getDatasSortedBy(path), fields, point_of_interest)
 
 # print datas
 print_datas_grouped(fields, point_of_interest, datas_grouped)
