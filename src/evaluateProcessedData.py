@@ -114,8 +114,8 @@ def getData(path_to_csv):
 
 
 def get_len_str():
-    len_str = 2 + 7 * 3 + 2
-    len_str += 5 + 13 + 2 + 2 + 2 + 8 + 5 + 75
+    len_str = 2 + 8 * 3 + 2
+    len_str += 6 + 13 + 2 + 2 + 2 + 8 + 5 + 7 + 60
 
     return len_str
 
@@ -135,13 +135,14 @@ def printHeader(data=None, fields=None):
 
     print('-' * get_len_str())
     print(
-        '| {acc:<5} | {arch:<13} | {epochs:<2} | {trained:<2} | {batch_size:<2} | {timeFormated:<8} | {time:<5} | {settings_name:<75} |'.format(
+        '| {acc:<6} | {arch:<13} | {epochs:<2} | {trained:<2} | {batch_size:<2} | {timeFormated:<8} | {time:<5} | {device:<7} | {settings_name:<60} |'.format(
             acc='acc',
             arch='arch',
             epochs='ep',
             trained='tr',
             batch_size='bs',
             timeFormated='hh:mm:ss',
+            device='device',
             time='sec',
             settings_name='settings file name'
         )
@@ -204,7 +205,7 @@ def printData(data, counter):
     timeFormated = '{:02d}:{:02d}:{:02d}'.format(timeHours, timeMinutes, timeSeconds)
 
     print(
-        '| {acc:5.2f} | {arch:>13} | {epochs:2d} | {trained:2d} | {batch_size:2d} | {timeFormated} | {time:5.0f} | {settings_name:<75} |'.format(
+        '| {acc:5.2f}% | {arch:>13} | {epochs:2d} | {trained:2d} | {batch_size:2d} | {timeFormated} | {time:5.0f} | {device:<7} | {settings_name:<60} |'.format(
             acc=data['max_val_accuracy'],
             arch=data['arch'],
             epochs=data['epochs'],
@@ -212,6 +213,7 @@ def printData(data, counter):
             batch_size=data['batch_size'],
             timeFormated=timeFormated,
             time=data['time_taken'],
+            device='gtx1060',
             settings_name=os.path.basename(data['csv_path_settings'])
         )
     )
