@@ -4,8 +4,8 @@ import os
 
 
 def get_len_str():
-    len_str = 2 + 9 * 3 + 2
-    len_str += 6 + 6 + 13 + 2 + 2 + 2 + 8 + 5 + 7 + 60
+    len_str = 2 + 10 * 3 + 2
+    len_str += 6 + 6 + 13 + 2 + 2 + 2 + 8 + 5 + 10 + 7 + 60
 
     return len_str
 
@@ -25,7 +25,7 @@ def print_header(fields=None, point_of_interest=None, data=None):
 
     print('-' * get_len_str())
     print(
-        '| {acc:<6} | {acc5:<6} | {arch:<13} | {epochs:<2} | {trained:<2} | {batch_size:<2} | {timeFormated:<8} | {time:<5} | {device:<7} | {settings_name:<60} |'.format(
+        '| {acc:<6} | {acc5:<6} | {arch:<13} | {epochs:<2} | {trained:<2} | {batch_size:<2} | {timeFormated:<8} | {time:<5} | {model_size:<10} | {device:<7} | {settings_name:<60} |'.format(
             acc='acc',
             acc5='acc5',
             arch='arch',
@@ -33,6 +33,7 @@ def print_header(fields=None, point_of_interest=None, data=None):
             trained='tr',
             batch_size='bs',
             timeFormated='hh:mm:ss',
+            model_size='model size',
             device='device',
             time='sec',
             settings_name='settings file name'
@@ -52,7 +53,7 @@ def print_data(fields, point_of_interest, data, counter):
     time_formated = '{:02d}:{:02d}:{:02d}'.format(time_hours, time_minutes, time_seconds)
 
     print(
-        '| {acc:5.2f}% | {acc5:5.2f}% | {arch:>13} | {epochs:2d} | {trained:2d} | {batch_size:2d} | {timeFormated} | {time:5.0f} | {device:<7} | {settings_name:<60} |'.format(
+        '| {acc:5.2f}% | {acc5:5.2f}% | {arch:>13} | {epochs:2d} | {trained:2d} | {batch_size:2d} | {timeFormated} | {time:5.0f} | {model_size:7.2f} MB | {device:<7} | {settings_name:<60} |'.format(
             acc=data['max_val_accuracy'],
             acc5=0,
             arch=data['arch'],
@@ -61,6 +62,7 @@ def print_data(fields, point_of_interest, data, counter):
             batch_size=data['batch_size'],
             timeFormated=time_formated,
             time=data['time_taken'],
+            model_size=data['model_size'] / 1024 / 1024,
             device='gtx1060',
             settings_name=os.path.basename(data['csv_path_settings'])
         )

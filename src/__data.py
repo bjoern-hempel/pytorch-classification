@@ -45,6 +45,12 @@ def getData(path_to_csv):
     data['csv_path_settings'] = os.path.join(data['csv_path_settings'], basename)
     data['csv_path_summary_full'] = data['csv_path_settings'].replace('settings_', 'summary_full_')
     data['csv_path_summary'] = data['csv_path_settings'].replace('settings_', 'summary_')
+    data['model_path'] = os.path.join(data['model_path'], basename).replace('settings_', 'model_best_').replace('.csv', '.pth')
+
+    data['model_size'] = 0
+    if os.path.isfile(data['model_path']):
+        stat_info = os.stat(data['model_path'])
+        data['model_size'] = stat_info.st_size
 
     # convert all data
     for index in data:
