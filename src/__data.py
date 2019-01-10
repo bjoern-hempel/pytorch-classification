@@ -97,6 +97,7 @@ def getData(path_to_csv):
     data['max_train_accuracy_5'] = max_train_accuracy_5
     data['max_val_accuracy_5'] = max_val_accuracy_5
     data['number_trained'] = number_trained
+    data['label'] = os.path.basename(data['process_path'])
 
     return data
 
