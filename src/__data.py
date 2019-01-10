@@ -46,6 +46,7 @@ def getData(path_to_csv):
     data['csv_path_summary_full'] = data['csv_path_settings'].replace('settings_', 'summary_full_')
     data['csv_path_summary'] = data['csv_path_settings'].replace('settings_', 'summary_')
     data['model_path'] = os.path.join(data['model_path'], basename).replace('settings_', 'model_best_').replace('.csv', '.pth')
+    data['log_version'] = '1.0'
 
     data['model_size'] = 0
     if os.path.isfile(data['model_path']):
@@ -85,6 +86,8 @@ def getData(path_to_csv):
                 number_trained += 1
 
             if len(row) >= 12:
+                data['log_version'] = '1.1'
+
                 if row[5] == 'train':
                     max_train_accuracy_5 = row[9] if row[9] > max_train_accuracy_5 else max_train_accuracy_5
 

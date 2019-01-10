@@ -4,8 +4,8 @@ import os
 
 
 def get_len_str():
-    len_str = 2 + 11 * 3 + 2
-    len_str += 6 + 6 + 13 + 5 + 2 + 2 + 2 + 8 + 5 + 10 + 7 + 60
+    len_str = 2 + 12 * 3 + 2
+    len_str += 6 + 6 + 13 + 5 + 2 + 2 + 2 + 8 + 5 + 10 + 4 + 7 + 60
 
     return len_str
 
@@ -25,7 +25,7 @@ def print_header(fields=None, point_of_interest=None, data=None):
 
     print('-' * get_len_str())
     print(
-        '| {acc:<6} | {acc5:<6} | {arch:<13} | {label:<5} | {epochs:<2} | {trained:<2} | {batch_size:<2} | {timeFormated:<8} | {time:<5} | {model_size:<10} | {device:<7} | {settings_name:<60} |'.format(
+        '| {acc:<6} | {acc5:<6} | {arch:<13} | {label:<5} | {epochs:<2} | {trained:<2} | {batch_size:<2} | {timeFormated:<8} | {time:<5} | {model_size:<10} | {log_version:<4} | {device:<7} | {settings_name:<60} |'.format(
             acc='acc',
             acc5='acc5',
             arch='arch',
@@ -35,6 +35,7 @@ def print_header(fields=None, point_of_interest=None, data=None):
             batch_size='bs',
             timeFormated='hh:mm:ss',
             model_size='model size',
+            log_version='ver.',
             device='device',
             time='sec',
             settings_name='settings file name'
@@ -54,7 +55,7 @@ def print_data(fields, point_of_interest, data, counter):
     time_formated = '{:02d}:{:02d}:{:02d}'.format(time_hours, time_minutes, time_seconds)
 
     print(
-        '| {acc:5.2f}% | {acc5:5.2f}% | {arch:>13} | {label:<5} | {epochs:2d} | {trained:2d} | {batch_size:2d} | {timeFormated} | {time:5.0f} | {model_size:7.2f} MB | {device:<7} | {settings_name:<60} |'.format(
+        '| {acc:5.2f}% | {acc5:5.2f}% | {arch:>13} | {label:<5} | {epochs:2d} | {trained:2d} | {batch_size:2d} | {timeFormated} | {time:5.0f} | {model_size:7.2f} MB | v{log_version:>3} | {device:<7} | {settings_name:<60} |'.format(
             acc=data['max_val_accuracy'],
             acc5=data['max_val_accuracy_5'],
             arch=data['arch'],
@@ -65,6 +66,7 @@ def print_data(fields, point_of_interest, data, counter):
             timeFormated=time_formated,
             time=data['time_taken'],
             model_size=data['model_size'] / 1024 / 1024,
+            log_version=data['log_version'],
             device='gtx1060',
             settings_name=os.path.basename(data['csv_path_settings'])
         )
