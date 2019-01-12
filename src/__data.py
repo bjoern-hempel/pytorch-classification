@@ -1,11 +1,15 @@
 import os
 import fnmatch
 import csv
+from datetime import datetime
+from datetime import timezone
+
 
 from __helper import *
+from __file import *
 
 
-def convertData(data):
+def convert_data(data):
     if isinstance(data, str):
         if data.isdigit():
             return int(data)
@@ -22,7 +26,7 @@ def convertData(data):
     return data
 
 
-def getData(path_to_csv):
+def get_data(path_to_csv):
     data = {}
     counter = 0
     with open(path_to_csv, newline='') as csvfile:
@@ -55,7 +59,7 @@ def getData(path_to_csv):
 
     # convert all data
     for index in data:
-        data[index] = convertData(data[index])
+        data[index] = convert_data(data[index])
 
     time_taken = 0
     max_train_accuracy = 0
@@ -74,7 +78,7 @@ def getData(path_to_csv):
         summary = csv.reader(csvfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_ALL, skipinitialspace=True)
         for row in summary:
             for i in range(len(row)):
-                row[i] = convertData(row[i])
+                row[i] = convert_data(row[i])
 
             time_taken += row[1]
 
@@ -101,11 +105,15 @@ def getData(path_to_csv):
     data['max_val_accuracy_5'] = max_val_accuracy_5
     data['number_trained'] = number_trained
     data['label'] = os.path.basename(data['process_path'])
+    data['main_class'] = data['process_path'].split('/')[2]
+    data['time_start'] = datetime.utcfromtimestamp(
+        int(creation_date(data['csv_path_settings']))
+    ).replace(tzinfo=timezone.utc).astimezone(tz=None).strftime('%y-%m-%d %H:%M')
 
     return data
 
 
-def getDatasSortedBy(path, sortedBy='max_val_accuracy'):
+def get_datas_sorted_by(path, sortedBy='max_val_accuracy'):
 
     # collect all configs
     setting_files = []
@@ -116,7 +124,7 @@ def getDatasSortedBy(path, sortedBy='max_val_accuracy'):
     # collect all datas
     datas = []
     for setting_file in setting_files:
-        data = getData(setting_file)
+        data = get_data(setting_file)
         datas.append(data)
 
     # sort datas
@@ -124,7 +132,7 @@ def getDatasSortedBy(path, sortedBy='max_val_accuracy'):
 
     return datas
 
-def getDataGroupedByPointOfInterest(datas, fields, point_of_interest=None):
+def get_data_grouped_by_point_of_interest(datas, fields, point_of_interest=None):
     data_grouped = {}
 
     if point_of_interest == None:
