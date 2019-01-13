@@ -22,7 +22,7 @@ def get_columns():
         'log_version': [4, '<4', '>3', 'v{}'],
         'device': [7, '<7', '<7', None],
         'validated_file_available': [1, '<1', '<1', None],
-        'settings_name': [23, '<23', '<23', None]
+        'settings_name': [22, '<22', '<22', None]
     }
 
 
