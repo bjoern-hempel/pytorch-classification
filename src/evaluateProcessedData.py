@@ -4,6 +4,12 @@
 Processed data evaluator. Evaluates all processed data produced by vendor/pytorch-examples/imagenet/main.py
 (bin/train).
 
+
+Usage:
+
+user$ src/evaluateProcessedData.py data/processed/food/unbalanced/90_10/elements/all/csv
+
+
 TODO: add some more fields to consider (point of interest fields)
 - auto model and csv finder (independent from given settings file path)
 - label (number of learned elements: all, 500, etc.)
@@ -29,31 +35,41 @@ __status__ = "Production"
 
 import pprint
 import sys
+import argparse
 
 from __print import *
 from __data import *
 from __args import *
 
-# path in which to search for settings
-path = 'data/processed/food/unbalanced/90_10/elements/all/csv'
+# create the argument parser
+parser = argparse.ArgumentParser(description='ImageNet Training Evaluation')
+
+# add all arguments to parser
+parser.add_argument('path',
+    help='Path to find the setting csv files', metavar='PATH')
+parser.add_argument('-p', '--point-of-interest', default=None, type=str, metavar='POINT_OF_INTEREST',
+    help='Group the output by point of interest (default: None)')
+parser.add_argument('-o', '--order-by', default='acc', type=str, metavar='ORDER_BY',
+    help='Group the output by point of interest (default: acc)')
+parser.add_argument('-s', '--show-legend', action='store_true',
+    help='Show legend if given')
+parser.add_argument('-d', '--devider', default=5, type=int, metavar='DEVIDER',
+    help='The number after which the output is to be optically separated by a separator line. (default: 5)')
+
+# parse all arguments
+args = parser.parse_args()
 
 # fields that can be grouped by
 fields = ['arch', 'epochs', 'batch_size', 'lr', 'weight_decay', 'momentum', 'linear_layer', 'workers']
-
-# point of interest: None (show all together) or one element of fields array
-point_of_interest = None if len(sys.argv) < 2 else sys.argv[1]
-
-# order field
-order_by = 'acc'
 
 # pretty printer
 pp = pprint.PrettyPrinter(indent=4)
 
 # check point of interest
-check_point_of_interest(fields, point_of_interest)
+check_point_of_interest(fields, args)
 
 # get datas and group them
-datas_grouped = get_data_grouped_by_point_of_interest(get_datas_sorted_by(path), fields, point_of_interest)
+datas_grouped = get_data_grouped_by_point_of_interest(get_datas_sorted_by(args.path), fields, args)
 
 # print datas
-print_datas_grouped(fields, point_of_interest, datas_grouped)
+print_datas_grouped(fields, args, datas_grouped)

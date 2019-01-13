@@ -90,11 +90,11 @@ def get_format_string_row():
     return '| {} |'.format(format_string)
 
 
-def print_header(fields=None, point_of_interest=None, data=None):
+def print_header(fields, args, data=None):
 
     print('')
 
-    if point_of_interest is not None:
+    if args.point_of_interest is not None:
         if data is not None and fields is not None:
             caption_str = ''
             for field in fields:
@@ -126,9 +126,9 @@ def print_header(fields=None, point_of_interest=None, data=None):
     print(get_line())
 
 
-def print_data(fields, point_of_interest, data, counter):
+def print_data(fields, args, data, counter):
     if counter == 0:
-        print_header(fields, point_of_interest, data)
+        print_header(fields, args, data)
 
     time_hours = math.floor(data['time_taken'] / 3600)
     time_minutes = math.floor((data['time_taken'] - time_hours * 3600) / 60)
@@ -161,14 +161,14 @@ def print_data(fields, point_of_interest, data, counter):
     )
 
 
-def print_datas(fields, point_of_interest, datas):
+def print_datas(fields, args, datas):
     counter = 0
     for data in datas:
 
-        if counter != 0 and counter % 5 == 0:
+        if counter != 0 and args.devider is not None and counter % args.devider == 0:
             print(get_line())
 
-        print_data(fields, point_of_interest, data, counter)
+        print_data(fields, args, data, counter)
 
         counter += 1
     print(get_line())
@@ -192,8 +192,11 @@ def print_legend():
     print('* device:   The device on which the training was performed')
 
 
-def print_datas_grouped(fields, point_of_interest, datas_grouped):
+def print_datas_grouped(fields, args, datas_grouped):
     for key, datas in datas_grouped.items():
-        print_datas(fields, point_of_interest, datas)
-    print_legend()
+        print_datas(fields, args, datas)
+
+    if args.show_legend:
+        print_legend()
+
     print('')

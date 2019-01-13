@@ -137,16 +137,16 @@ def get_datas_sorted_by(path, sortedBy='max_val_accuracy'):
     datas.sort(key=lambda x: x[sortedBy], reverse=True)
     return datas
 
-def get_data_grouped_by_point_of_interest(datas, fields, point_of_interest=None):
+def get_data_grouped_by_point_of_interest(datas, fields, args):
     data_grouped = {}
 
-    if point_of_interest == None:
+    if args.point_of_interest is None:
         data_grouped['all'] = []
 
         for index_data in range(len(datas)):
             data_grouped['all'].append(datas[index_data])
     else:
-        fields.remove(point_of_interest)
+        fields.remove(args.point_of_interest)
 
         for index_data in range(len(datas)):
             key = ''
