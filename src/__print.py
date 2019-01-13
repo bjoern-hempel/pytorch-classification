@@ -116,8 +116,8 @@ def print_header(fields=None, point_of_interest=None, data=None):
             batch_size='bs',
             date='start',
             timeFormated='duration',
-            model_size='model size',
-            log_version='ver.',
+            model_size='size',
+            log_version='vers',
             device='device',
             time='sec',
             settings_name='settings file name'
@@ -174,7 +174,26 @@ def print_datas(fields, point_of_interest, datas):
     print(get_line())
 
 
+def print_legend():
+    print('')
+    print('* model:    The name of the used deep neural network')
+    print('* acc 1:    Accuracy of predicted best class')
+    print('* acc 5:    Accuracy of predicted best five classes')
+    print('* mc:       The main class (the name of the training set)')
+    print('* label:    The label (trained / validated data set) under which the training was carried out')
+    print('* ep:       The number of epochs to be trained')
+    print('* te:       The number of epochs already trained')
+    print('* be:       The epoch with the best accuracy')
+    print('* bs:       The batch size under which the training was performed')
+    print('* start:    The start time at which the training was started')
+    print('* duration: The time needed for the training')
+    print('* size:     The required memory for all parameters of the network')
+    print('* vers:     The version of the logging file')
+    print('* device:   The device on which the training was performed')
+
+
 def print_datas_grouped(fields, point_of_interest, datas_grouped):
     for key, datas in datas_grouped.items():
         print_datas(fields, point_of_interest, datas)
+    print_legend()
     print('')
