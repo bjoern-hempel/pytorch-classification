@@ -69,6 +69,7 @@ def get_data(path_to_csv):
     max_train_accuracy_5 = 0
     max_val_accuracy_5 = 0
     number_trained = 0
+    best_epoch = 0
     counter = 0
 
     with open(data['csv_path_summary'], newline='') as csvfile:
@@ -85,11 +86,14 @@ def get_data(path_to_csv):
             time_taken += row[1]
 
             if row[5] == 'train':
-                max_train_accuracy = row[7] if row[7] > max_train_accuracy else max_train_accuracy
+                if row[7] > max_train_accuracy:
+                    max_train_accuracy = row[7]
 
             if row[5] == 'val':
-                max_val_accuracy = row[7] if row[7] > max_val_accuracy else max_val_accuracy
                 number_trained += 1
+                if row[7] > max_val_accuracy:
+                    max_val_accuracy = row[7]
+                    best_epoch = number_trained
 
             if len(row) >= 12:
                 data['log_version'] = '1.1'
@@ -106,6 +110,7 @@ def get_data(path_to_csv):
     data['max_train_accuracy_5'] = max_train_accuracy_5
     data['max_val_accuracy_5'] = max_val_accuracy_5
     data['number_trained'] = number_trained
+    data['best_epoch'] = best_epoch
     data['label'] = os.path.basename(data['process_path'])
     data['main_class'] = data['process_path'].split('/')[2]
     data['time_start'] = datetime.utcfromtimestamp(
