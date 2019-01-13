@@ -35,7 +35,7 @@ from __data import *
 from __args import *
 
 # path in which to search for settings
-path = 'data/processed/food/unbalanced/90_10/elements/all/csv/resnet18/224x224/gpu1060'
+path = 'data/processed/food/unbalanced/90_10/elements/all/csv'
 
 # fields that can be grouped by
 fields = ['arch', 'epochs', 'batch_size', 'lr', 'weight_decay', 'momentum', 'linear_layer', 'workers']

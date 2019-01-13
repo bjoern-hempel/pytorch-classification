@@ -1,9 +1,10 @@
 import os
 import fnmatch
 import csv
+import glob
+
 from datetime import datetime
 from datetime import timezone
-
 
 from __helper import *
 from __file import *
@@ -39,17 +40,18 @@ def get_data(path_to_csv):
         for row in settings:
             data[row[1]] = row[2]
 
-    folders = data['csv_path_settings'].split('/csv/')
+    dirname = os.path.dirname(path_to_csv)
+    folders = dirname.split('/csv/')
 
     data['process_path'] = folders[0]
     data['property_path'] = folders[1]
 
     basename = os.path.basename(path_to_csv)
 
-    data['csv_path_settings'] = os.path.join(data['csv_path_settings'], basename)
+    data['csv_path_settings'] = os.path.join(dirname, basename)
     data['csv_path_summary_full'] = data['csv_path_settings'].replace('settings_', 'summary_full_')
     data['csv_path_summary'] = data['csv_path_settings'].replace('settings_', 'summary_')
-    data['model_path'] = os.path.join(data['model_path'], basename).replace('settings_', 'model_best_').replace('.csv', '.pth')
+    data['model_path'] = os.path.join(folders[0], 'models', folders[1], basename).replace('settings_', 'model_best_').replace('.csv', '.pth')
     data['log_version'] = '1.0'
 
     data['model_size'] = 0
@@ -117,9 +119,8 @@ def get_datas_sorted_by(path, sortedBy='max_val_accuracy'):
 
     # collect all configs
     setting_files = []
-    for file in os.listdir(path):
-        if fnmatch.fnmatch(file, 'settings*.csv'):
-            setting_files.append(os.path.join(path, file))
+    for file in glob.iglob('{}/**/{}'.format(path, 'settings*.csv'), recursive=True):
+        setting_files.append(file)
 
     # collect all datas
     datas = []
@@ -129,7 +130,6 @@ def get_datas_sorted_by(path, sortedBy='max_val_accuracy'):
 
     # sort datas
     datas.sort(key=lambda x: x[sortedBy], reverse=True)
-
     return datas
 
 def get_data_grouped_by_point_of_interest(datas, fields, point_of_interest=None):
