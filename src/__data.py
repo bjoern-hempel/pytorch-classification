@@ -104,6 +104,7 @@ def get_data(path_to_csv):
                 if row[5] == 'val':
                     max_val_accuracy_5 = row[9] if row[9] > max_val_accuracy_5 else max_val_accuracy_5
 
+    data['csv_path_validated'] = get_validated_path_from_model(data['model_path'], True)
     data['time_taken'] = time_taken
     data['max_train_accuracy'] = max_train_accuracy
     data['max_val_accuracy'] = max_val_accuracy

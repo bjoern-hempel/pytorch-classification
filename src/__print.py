@@ -21,7 +21,8 @@ def get_columns():
         'model_size': [10, '<10', '7.2f', '{} MB'],
         'log_version': [4, '<4', '>3', 'v{}'],
         'device': [7, '<7', '<7', None],
-        'settings_name': [30, '<30', '<30', None]
+        'validated_file_available': [1, '<1', '<1', None],
+        'settings_name': [23, '<23', '<23', None]
     }
 
 
@@ -119,7 +120,7 @@ def print_header(fields, args, data=None):
             model_size='size',
             log_version='vers',
             device='device',
-            time='sec',
+            validated_file_available='v',
             settings_name='settings file name'
         )
     )
@@ -136,9 +137,11 @@ def print_data(fields, args, data, counter):
 
     time_formated = '{:02d}:{:02d}:{:02d}'.format(time_hours, time_minutes, time_seconds)
 
+    columns = get_columns()
+
     settings_name = os.path.basename(data['csv_path_settings'])
     if len(settings_name):
-        settings_name = '...' + os.path.basename(data['csv_path_settings'])[-27:]
+        settings_name = '...' + os.path.basename(data['csv_path_settings'])[-columns['settings_name'][0]+3:]
 
     print(
         get_format_string_row().format(
@@ -156,6 +159,7 @@ def print_data(fields, args, data, counter):
             model_size=data['model_size'] / 1024 / 1024,
             log_version=data['log_version'],
             device='gtx1060',
+            validated_file_available='-' if data['csv_path_validated'] is None else 'x',
             settings_name=settings_name
         )
     )
@@ -190,6 +194,7 @@ def print_legend():
     print('* size:     The required memory for all parameters of the network')
     print('* vers:     The version of the logging file')
     print('* device:   The device on which the training was performed')
+    print('* v:        Shows whether the validated file has already been generated')
 
 
 def print_datas_grouped(fields, args, datas_grouped):
