@@ -1,6 +1,7 @@
 import os
 import glob
 import platform
+import re
 
 
 def creation_date(path_to_file):
@@ -21,14 +22,59 @@ def creation_date(path_to_file):
             return stat.st_mtime
 
 
-def createFolderForFile(file, mode=0o775):
+def create_folder_for_file(file, mode=0o775):
     path = os.path.dirname(file)
     os.makedirs(path, mode, True)
 
 
-def searchFiles(path, name):
+def search_files(path, name):
     files = []
     for file in glob.iglob('{}/**/{}'.format(path, name), recursive=True):
         files.append(file)
 
     return files
+
+def analyse_file_and_get_config(file):
+
+    # build file template
+    file_template = re.sub(
+        r"/(csv|models)/",
+        "/{}/",
+        re.sub(
+            r"/(settings|summary_full|summary|validated|checkpoint|model_best)_",
+            "/{}_",
+            re.sub(
+                r"\.(csv)$",
+                ".{}",
+                file
+            )
+        )
+    )
+
+    # settings of all files to create
+    settings = {
+        'csv.settings': ['csv', 'settings', 'csv'],
+        'csv.summary_full': ['csv', 'summary_full', 'csv'],
+        'csv.summary': ['csv', 'summary', 'csv'],
+        'csv.validated': ['csv', 'validated', 'csv'],
+
+        'model.checkpoint': ['models', 'checkpoint', 'pth'],
+        'model.model_best': ['models', 'model_best', 'pth'],
+
+        'pdf.confusion_matrix_val': ['charts', 'confusion_matrix_val', 'pdf'],
+        'png.confusion_matrix_val': ['charts', 'confusion_matrix_val', 'png']
+    }
+
+    config = {
+        'files': {}
+    }
+
+    for key, values in settings.items():
+        file_path = file_template.format(values[0], values[1], values[2])
+
+        config['files'][key] = {
+            'path': file_path,
+            'exists': os.path.isfile(file_path)
+        }
+
+    return config

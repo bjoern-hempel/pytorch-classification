@@ -1,14 +1,20 @@
+#!/usr/bin/env python
+
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 import random
 import os
 import csv
+import pprint
 
 from matplotlib import cm, colors
 from random import randint
 from math import ceil, floor
 from __file import *
+
+# pretty printer
+pp = pprint.PrettyPrinter(indent=4)
 
 # what to do?
 showPlot = False
@@ -16,9 +22,10 @@ savePDF = True
 savePNG = True
 
 # train data elements
-categorie = 'food'
+category = 'food'
 dispersionType = 'unbalanced'
 dispersion = '90_10'
+label = 'all'
 
 # technique data elements
 model = 'resnet152'
@@ -28,36 +35,28 @@ validationSet = 'val'
 # other variables
 machine='gpu1060'
 
-# build the
-calculatedPath = '/media/bjoern/Daten/Development/classification/data/processed/{}/{}/{}/elements'.format(
-    categorie,
+# build the root path
+rootPath = '/media/bjoern/Daten/Development/classification/data/processed/{}/{}/{}/elements/{}'.format(
+    category,
     dispersionType,
-    dispersion
+    dispersion,
+    label
 )
 
-# build csv, pdf and png path
-pathCSV = '{}' + '/csv/{}/{}/{}/validated.csv'.format(
-    model,
-    featureSize,
-    machine
-)
-pathPDF = '{}' + '/charts/{}/{}/{}'.format(
-    model,
-    featureSize,
-    machine
-) + '/confusion-matrix.{}.pdf'
-pathPNG = '{}' + '/charts/{}/{}/{}'.format(
-    model,
-    featureSize,
-    machine
-) + '/confusion-matrix.{}.png'
+# get all validated files
+validated_files = search_files(os.path.join(rootPath, 'csv'), 'validated_*.csv')
 
-# set output size
-figSize = plt.rcParams["figure.figsize"]
-figSize[0] = 18
-figSize[1] = 12
-plt.rcParams["figure.figsize"] = figSize
+# get config from first validated file
+config = analyse_file_and_get_config(validated_files[0])
 
+# get all needed paths
+path_csv = config['files']['csv.validated']['path']
+path_pdf = config['files']['pdf.confusion_matrix_val']['path']
+path_png = config['files']['png.confusion_matrix_val']['path']
+
+# cancel if validated csv file does not exist
+if not config['files']['csv.validated']['exists']:
+    print('Validated CSV file "{}" was not found'.format(path_csv))
 
 # translate dict: class name -> real name
 translateClass = {
@@ -136,17 +135,20 @@ def getHex(r, g, b, f=0):
     return '#' + format(r, 'x').zfill(2) + format(g, 'x').zfill(2) + format(b, 'x').zfill(2)
 
 
-def getIdOfGivenLabel(label):
+def get_id_of_given_label(label):
     return list(translateClass.keys()).index(label)
 
 
-def getNormalizedData(calculatedPath, label, numberClasses):
+def get_normalized_data(path_csv, numberClasses):
     data = np.zeros((numberClasses, numberClasses))
 
-    with open(os.path.join(calculatedPath, pathCSV.format(label)), 'r') as csvfile:
+    with open(path_csv, 'r') as csvfile:
         plots = csv.reader(csvfile, delimiter=',')
         counter = 0
         countClasses = np.zeros(numberClasses).astype(int)
+
+        count_classes_all = 0
+        correct_predicted = 0
 
         # collect the numbers of train and validation
         for row in plots:
@@ -156,67 +158,62 @@ def getNormalizedData(calculatedPath, label, numberClasses):
             if counter == 1:
                 continue
 
-            realId = getIdOfGivenLabel(row[4])
-            predId = getIdOfGivenLabel(row[5])
+            realId = get_id_of_given_label(row[4])
+            predId = get_id_of_given_label(row[5])
 
             countClasses[realId] += 1
             data[realId][predId] += 1
 
+            count_classes_all += 1
+            if realId == predId:
+                correct_predicted += 1
+
+
         # replace 0 > nan
-        for i in range(50):
-            for j in range(50):
+        for i in range(numberClasses):
+            for j in range(numberClasses):
                 if data[i, j] == 0.0:
                     data[i, j] = np.nan
                 else:
                     data[i, j] = data[i, j] / countClasses[i]
 
-    return (data, countClasses)
+    accuracy = 100 * correct_predicted / count_classes_all
+
+    return (data, countClasses, accuracy)
 
 
-def getClassNamesWithNumber(classNames, countClasses, data):
-    classNamesReturn = []
+def get_class_names_with_number(class_names, count_classes, data):
+    class_names_return = []
 
-    for i in range(len(classNames)):
+    for i in range(len(class_names)):
         if np.isnan(data[i][i]):
             percent = 0
         else:
             percent = 100 * float(data[i][i])
 
-        classNamesReturn.append('{} ({}; {:.1f}%)'.format(classNames[i], str(countClasses[i]), percent))
+        class_names_return.append('{} ({}; {:.1f}%)'.format(class_names[i], str(count_classes[i]), percent))
 
-    return classNamesReturn
-
-
-def getLabels(calculatePath):
-    labels = []
-
-    for label in os.listdir(calculatePath):
-        if os.path.isdir(os.path.join(calculatePath, label)):
-            labels.append(label)
-
-    return labels
+    return class_names_return
 
 
-# get all labels from calculated path
-labels = getLabels(calculatedPath)
+def build_confusion_matrix(path_csv, translate_class):
+    # set output size
+    fig_size = plt.rcParams["figure.figsize"]
+    fig_size[0] = 18
+    fig_size[1] = 12
+    plt.rcParams["figure.figsize"] = fig_size
 
-# build confusion matrix from all labels
-for label in labels:
-
-    # check if csv is available
-    if not os.path.isfile(os.path.join(calculatedPath, pathCSV.format(label))):
-        continue
-
-    (data, countClasses) = getNormalizedData(calculatedPath, label, len(translateClass))
-    classNames = list(translateClass.values())
-    classNamesWithNumber = getClassNamesWithNumber(classNames, countClasses, data)
-    addColor = 0
+    # calculate data
+    (data, count_classes, accuracy) = get_normalized_data(path_csv, len(translate_class))
+    class_names = list(translate_class.values())
+    class_names_with_number = get_class_names_with_number(class_names, count_classes, data)
+    add_color = 0
     cmap = colors.ListedColormap([
-        getHex(0 + addColor, 128 + addColor, 0 + addColor, 0.8),
-        getHex(0 + addColor, 128 + addColor, 0 + addColor, 0.6),
-        getHex(0 + addColor, 128 + addColor, 0 + addColor, 0.4),
-        getHex(0 + addColor, 128 + addColor, 0 + addColor, 0.2),
-        getHex(0 + addColor, 128 + addColor, 0 + addColor, 0)
+        getHex(0 + add_color, 128 + add_color, 0 + add_color, 0.8),
+        getHex(0 + add_color, 128 + add_color, 0 + add_color, 0.6),
+        getHex(0 + add_color, 128 + add_color, 0 + add_color, 0.4),
+        getHex(0 + add_color, 128 + add_color, 0 + add_color, 0.2),
+        getHex(0 + add_color, 128 + add_color, 0 + add_color, 0)
     ])
 
     fig, ax = plt.subplots()
@@ -230,11 +227,11 @@ for label in labels:
     im.set_zorder(1)
 
     # We want to show all ticks...
-    ax.set_xticks(np.arange(len(classNames)))
-    ax.set_yticks(np.arange(len(classNamesWithNumber)))
+    ax.set_xticks(np.arange(len(class_names)))
+    ax.set_yticks(np.arange(len(class_names_with_number)))
 
-    ax.set_xticklabels(classNames)
-    ax.set_yticklabels(classNamesWithNumber)
+    ax.set_xticklabels(class_names)
+    ax.set_yticklabels(class_names_with_number)
 
     # Rotate the tick labels and set their alignment.
     plt.setp(
@@ -245,8 +242,8 @@ for label in labels:
     )
 
     # Loop over data dimensions and create text annotations.
-    for i in range(len(classNames)):
-        for j in range(len(classNames)):
+    for i in range(len(class_names)):
+        for j in range(len(class_names)):
             text = ax.text(
                 j,
                 i,
@@ -258,32 +255,38 @@ for label in labels:
             )
             text.set_zorder(2)
 
-    title = 'Confusion matrix "{}-{}" ({}/{}/{}/{}/{}) [%] '.format(
+    title = 'Confusion matrix "{}-{}" ({}/{}/{}/{}/{}) [{:.2f}%] '.format(
         label,
         validationSet,
-        categorie,
+        category,
         dispersionType,
         dispersion,
         model,
-        featureSize
+        featureSize,
+        accuracy
     )
 
     ax.set_title(title)
     fig.tight_layout()
 
-    # save the diagram
-    if savePDF:
-        outputPDFPath = os.path.join(calculatedPath, pathPDF.format(label, validationSet))
-        createFolderForFile(outputPDFPath)
-        print('Save document to {}'.format(outputPDFPath))
-        plt.savefig(outputPDFPath)
-    if savePNG:
-        outputPNGPath = os.path.join(calculatedPath, pathPNG.format(label, validationSet))
-        createFolderForFile(outputPNGPath)
-        print('Save document to {}'.format(outputPNGPath))
-        plt.savefig(outputPNGPath)
+    return (plt, ax)
 
-    ax.grid(linestyle='-', linewidth=0.5, color=getHex(200, 200, 200))
 
-    if showPlot:
-        plt.show()
+(plt, ax) = build_confusion_matrix(path_csv, translateClass)
+
+# save the diagram (pdf)
+if savePDF:
+    create_folder_for_file(path_pdf)
+    print('Save document to {}'.format(path_pdf))
+    plt.savefig(path_pdf)
+
+# save the diagram (png)
+if savePNG:
+    create_folder_for_file(path_png)
+    print('Save document to {}'.format(path_png))
+    plt.savefig(path_png)
+
+ax.grid(linestyle='-', linewidth=0.5, color=getHex(200, 200, 200))
+
+if showPlot:
+    plt.show()
