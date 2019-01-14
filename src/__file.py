@@ -1,4 +1,5 @@
 import os
+import glob
 import platform
 
 
@@ -23,3 +24,11 @@ def creation_date(path_to_file):
 def createFolderForFile(file, mode=0o775):
     path = os.path.dirname(file)
     os.makedirs(path, mode, True)
+
+
+def searchFiles(path, name):
+    files = []
+    for file in glob.iglob('{}/**/{}'.format(path, name), recursive=True):
+        files.append(file)
+
+    return files

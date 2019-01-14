@@ -7,3 +7,11 @@ def check_point_of_interest(fields, args):
             print('Unknown point of interest: {}'.format(args.point_of_interest))
             print('Allowed fields: "{}"'.format('", "'.join(fields)))
             exit()
+
+def prepare_args(args, output_modes):
+    args.fields = args.fields.split(',')
+
+    if args.output_mode is not None:
+        args.fields = output_modes[args.output_mode]['fields']
+
+    return args

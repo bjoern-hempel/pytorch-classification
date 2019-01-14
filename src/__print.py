@@ -17,12 +17,13 @@ def get_columns():
         'best_epoch': [2, '<2', '2d', None],
         'batch_size': [2, '<2', '2d', None],
         'date': [14, '<14', '<14', None],
-        'timeFormated': [8, '<8', None, None],
+        'time_formated': [8, '<8', None, None],
         'model_size': [10, '<10', '7.2f', '{} MB'],
         'log_version': [4, '<4', '>3', 'v{}'],
         'device': [7, '<7', '<7', None],
         'validated_file_available': [1, '<1', '<1', None],
-        'settings_name': [22, '<22', '<22', None]
+        'settings_name': [22, '<22', '<22', None],
+        'settings_name_full': [100, '<100', '<100', None]
     }
 
 
@@ -43,39 +44,39 @@ def get_len_str(with_margin=True):
     return len_str
 
 
-def get_line():
+def get_line(args):
     """"""
     line = ''
 
     columns = get_columns()
 
-    for field_name in columns:
+    for field_name in args.fields:
         line += '' if line == '' else '-+-'
         line += '-' * columns[field_name][0]
 
     return '+-' + line + '-+'
 
 
-def get_format_string_header():
+def get_format_string_header(args):
 
     format_string = ''
 
     columns = get_columns()
 
-    for field_name in columns:
+    for field_name in args.fields:
         format_string += '' if format_string == '' else ' | '
         format_string += '{{{}:{}}}'.format(field_name, columns[field_name][1])
 
     return '| {} |'.format(format_string)
 
 
-def get_format_string_row():
+def get_format_string_row(args):
 
     format_string = ''
 
     columns = get_columns()
 
-    for field_name in columns:
+    for field_name in args.fields:
         format_string += '' if format_string == '' else ' | '
 
         if columns[field_name][2] is not None:
@@ -103,9 +104,9 @@ def print_header(fields, args, data=None):
                 caption_str += '{}: {}'.format(field, str(data[field]))
             print('{}'.format(caption_str))
 
-    print(get_line())
+    print(get_line(args))
     print(
-        get_format_string_header().format(
+        get_format_string_header(args).format(
             arch='model',
             acc='acc 1',
             acc5='acc 5',
@@ -116,15 +117,16 @@ def print_header(fields, args, data=None):
             best_epoch='be',
             batch_size='bs',
             date='start',
-            timeFormated='duration',
+            time_formated='duration',
             model_size='size',
             log_version='vers',
             device='device',
             validated_file_available='v',
-            settings_name='settings file name'
+            settings_name='settings file name',
+            settings_name_full='settings file name'
         )
     )
-    print(get_line())
+    print(get_line(args))
 
 
 def print_data(fields, args, data, counter):
@@ -140,11 +142,15 @@ def print_data(fields, args, data, counter):
     columns = get_columns()
 
     settings_name = os.path.basename(data['csv_path_settings'])
-    if len(settings_name):
-        settings_name = '...' + os.path.basename(data['csv_path_settings'])[-columns['settings_name'][0]+3:]
+    if len(settings_name) > columns['settings_name'][0]:
+        settings_name = '...' + settings_name[-columns['settings_name'][0]+3:]
+
+    settings_name_full = data['csv_path_settings'].split('/csv/')[1]
+    if len(settings_name_full) > columns['settings_name_full'][0]:
+        settings_name_full = '...' + settings_name_full[-columns['settings_name_full'][0]+3:]
 
     print(
-        get_format_string_row().format(
+        get_format_string_row(args).format(
             arch=data['arch'],
             acc=data['max_val_accuracy'],
             acc5=data['max_val_accuracy_5'],
@@ -155,12 +161,13 @@ def print_data(fields, args, data, counter):
             best_epoch=data['best_epoch'],
             batch_size=data['batch_size'],
             date=data['time_start'],
-            timeFormated=time_formated,
+            time_formated=time_formated,
             model_size=data['model_size'] / 1024 / 1024,
             log_version=data['log_version'],
             device='gtx1060',
             validated_file_available='-' if data['csv_path_validated'] is None else 'x',
-            settings_name=settings_name
+            settings_name=settings_name,
+            settings_name_full=settings_name_full
         )
     )
 
@@ -170,12 +177,12 @@ def print_datas(fields, args, datas):
     for data in datas:
 
         if counter != 0 and args.devider is not None and counter % args.devider == 0:
-            print(get_line())
+            print(get_line(args))
 
         print_data(fields, args, data, counter)
 
         counter += 1
-    print(get_line())
+    print(get_line(args))
 
 
 def print_legend():
