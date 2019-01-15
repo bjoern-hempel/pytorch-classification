@@ -66,7 +66,8 @@ def analyse_file_and_get_config(file):
     }
 
     config = {
-        'files': {}
+        'files': {},
+        'property_path': os.path.dirname(file.split('/processed/')[1]).replace('/elements/', '/')
     }
 
     for key, values in settings.items():

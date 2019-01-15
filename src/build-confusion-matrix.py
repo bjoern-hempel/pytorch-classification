@@ -46,18 +46,6 @@ rootPath = '/media/bjoern/Daten/Development/classification/data/processed/{}/{}/
 # get all validated files
 validated_files = search_files(os.path.join(rootPath, 'csv'), 'validated_*.csv')
 
-# get config from first validated file
-config = analyse_file_and_get_config(validated_files[0])
-
-# get all needed paths
-path_csv = config['files']['csv.validated']['path']
-path_pdf = config['files']['pdf.confusion_matrix_val']['path']
-path_png = config['files']['png.confusion_matrix_val']['path']
-
-# cancel if validated csv file does not exist
-if not config['files']['csv.validated']['exists']:
-    print('Validated CSV file "{}" was not found'.format(path_csv))
-
 # translate dict: class name -> real name
 translateClass = {
     'baked_beans': 'Baked Beans',
@@ -196,7 +184,7 @@ def get_class_names_with_number(class_names, count_classes, data):
     return class_names_return
 
 
-def build_confusion_matrix(path_csv, translate_class):
+def build_confusion_matrix(config, translate_class):
     # set output size
     fig_size = plt.rcParams["figure.figsize"]
     fig_size[0] = 18
@@ -204,7 +192,7 @@ def build_confusion_matrix(path_csv, translate_class):
     plt.rcParams["figure.figsize"] = fig_size
 
     # calculate data
-    (data, count_classes, accuracy) = get_normalized_data(path_csv, len(translate_class))
+    (data, count_classes, accuracy) = get_normalized_data(config['files']['csv.validated']['path'], len(translate_class))
     class_names = list(translate_class.values())
     class_names_with_number = get_class_names_with_number(class_names, count_classes, data)
     add_color = 0
@@ -255,14 +243,9 @@ def build_confusion_matrix(path_csv, translate_class):
             )
             text.set_zorder(2)
 
-    title = 'Confusion matrix "{}-{}" ({}/{}/{}/{}/{}) [{:.2f}%] '.format(
-        label,
+    title = 'Confusion matrix "{}" ({}) [{:.2f}%] '.format(
         validationSet,
-        category,
-        dispersionType,
-        dispersion,
-        model,
-        featureSize,
+        config['property_path'],
         accuracy
     )
 
@@ -272,21 +255,33 @@ def build_confusion_matrix(path_csv, translate_class):
     return (plt, ax)
 
 
-(plt, ax) = build_confusion_matrix(path_csv, translateClass)
+for validated_file in validated_files:
+    # get config from first validated file
+    config = analyse_file_and_get_config(validated_file)
 
-# save the diagram (pdf)
-if savePDF:
-    create_folder_for_file(path_pdf)
-    print('Save document to {}'.format(path_pdf))
-    plt.savefig(path_pdf)
+    # cancel if validated csv file does not exist
+    if not config['files']['csv.validated']['exists']:
+        print('Validated CSV file "{}" was not found.'.format(config['files']['csv.validated']['path']))
+        continue
 
-# save the diagram (png)
-if savePNG:
-    create_folder_for_file(path_png)
-    print('Save document to {}'.format(path_png))
-    plt.savefig(path_png)
+    # build the chart
+    (plt, ax) = build_confusion_matrix(config, translateClass)
 
-ax.grid(linestyle='-', linewidth=0.5, color=getHex(200, 200, 200))
+    # save the diagram (pdf)
+    if savePDF:
+        path_pdf = config['files']['pdf.confusion_matrix_val']['path']
+        create_folder_for_file(path_pdf)
+        print('Save document to {}'.format(path_pdf))
+        plt.savefig(path_pdf)
 
-if showPlot:
-    plt.show()
+    # save the diagram (png)
+    if savePNG:
+        path_png = config['files']['png.confusion_matrix_val']['path']
+        create_folder_for_file(path_png)
+        print('Save document to {}'.format(path_png))
+        plt.savefig(path_png)
+
+    ax.grid(linestyle='-', linewidth=0.5, color=getHex(200, 200, 200))
+
+    if showPlot:
+        plt.show()
