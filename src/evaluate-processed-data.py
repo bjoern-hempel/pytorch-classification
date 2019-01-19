@@ -7,7 +7,7 @@ Processed data evaluator. Evaluates all processed data produced by vendor/pytorc
 
 Usage:
 
-user$ src/evaluateProcessedData.py data/processed/food/unbalanced/90_10/elements/all/csv
+user$ src/evaluate-processed-data.py data/processed/food/unbalanced/90_10/elements/all/csv
 
 
 TODO: add some more fields to consider (point of interest fields)
