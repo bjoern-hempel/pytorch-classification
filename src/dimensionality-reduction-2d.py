@@ -22,21 +22,36 @@ __maintainer__ = "Björn Hempel"
 __email__ = "bjoern@hempel.li"
 __status__ = "Production"
 
+
 import pprint
 import math
 
-# pretty printer
+
+# Configure the pretty printer
 pp = pprint.PrettyPrinter(indent=4)
 
 
-def get_interbreeding_indexes(loop, including_same = False, cross = False, deep = 0):
+def get_interbreeding_indexes(index_count, including_same = False, cross = False, deep = 0) -> 'list':
     """Returns an array combining each with each element.
 
-    incl
+    Parameters
+    ----------
+    index_count : int
+        The number of elements to interbreed.
+    including_same : bool
+        Combinations are possible.
+    cross : bool
+        The order of the returned indices is significant.
+
+    Returns
+    -------
+    list
+        Returns a list (array) of index combinations.
+
     """
     indexes = []
     correct = 1 if not including_same else 0
-    for i in range(loop - correct):
+    for i in range(index_count - correct):
         index_from = deep
         index_to = i + deep + correct
 
@@ -51,8 +66,8 @@ def get_interbreeding_indexes(loop, including_same = False, cross = False, deep 
                 index_from
             ])
 
-    if loop - correct > 1:
-        indexes += get_interbreeding_indexes(loop - 1, including_same, cross, deep + 1)
+    if index_count - correct > 1:
+        indexes += get_interbreeding_indexes(index_count - 1, including_same, cross, deep + 1)
 
     return indexes
 
@@ -153,12 +168,12 @@ def get_point_from_lengths(point_A, point_B, length_1, length_2, direction='righ
     return get_point_from_lengths_x_first(xA, yA, xB, yB, length_1, length_2, direction)
 
 
-def get_points_from_lengths(P_A, P_B, l2, l3):
-    """Corresponds to function get_point_from_lengths, but for both directions left and right and
+def get_points_from_lengths(point_A, point_B, length_1, length_2):
+    """Corresponds to function get_point_from_lengths, but calculates both directions left and right and
     returns the result as an array."""
     return [
-        get_point_from_lengths(P_A, P_B, l2, l3, 'right'),
-        get_point_from_lengths(P_A, P_B, l2, l3, 'left')
+        get_point_from_lengths(point_A, point_B, length_1, length_2, 'right'),
+        get_point_from_lengths(point_A, point_B, length_1, length_2, 'left')
     ]
 
 
@@ -178,7 +193,7 @@ def get_best_distances(distances, points_base, points_compare):
     return distances
 
 
-def get_point(previously_calculated_points, length_array, current_point):
+def get_point(previously_calculated_points, length_array, current_point, cancel_distance = None):
     """Calculate the best "current" point with the condition of all given length_array."""
     data = []
 
@@ -226,6 +241,11 @@ def get_point(previously_calculated_points, length_array, current_point):
                 )
             )
 
+            if cancel_distance is not None:
+                for j in range(2):
+                    if distances[j] < cancel_distance:
+                        return points[j]
+
         # get the point with the lowest distance (this point is on the right side)
         if distances[0] < distances[1]:
             return points[0]
@@ -261,7 +281,7 @@ def calculate_points_from_lengths(length_array):
             points_calculated[current_point] = [0, length_array[0][1]]
             continue
 
-        points_calculated[current_point] = get_point(points_calculated, length_array, current_point)
+        points_calculated[current_point] = get_point(points_calculated, length_array, current_point, 1e-10)
 
     return points_calculated
 
