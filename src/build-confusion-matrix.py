@@ -101,7 +101,7 @@ translateClass = {
 }
 
 
-# calulate the hex value
+# calculate the hex value
 def getHex(r, g, b, f=0):
     # calculate the color factor
     r = ceil(r + ((255 - r) * f))

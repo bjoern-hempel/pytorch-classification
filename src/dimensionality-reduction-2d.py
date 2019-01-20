@@ -342,32 +342,92 @@ def print_points(points, title = None):
     print('')
 
 
+# some markers and colors to mark the points on map
+markers = ['o', 'v', '^', '<', '>', 'X', 's', 'p', 'P', '*']
+colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#00ffff', '#ff00ff']
 
+# the class names
+dict_translate_class = {
+    'baked_beans': 'Baked Beans',
+    'baked_salmon': 'Baked Salmon',
+    'beef_stew': 'Beef Stew',
+    'beef_stroganoff': 'Beef Stroganoff',
+    'brownies': 'Brownies',
+    'bundt_cake': 'Bundt Cake',
+    'burger': 'Burger',
+    'burrito': 'Burrito',
+    'buttermilk_biscuits': 'Buttermilk Biscuits',
+    'caesar_salad': 'Caesar Salad',
+    'calzone': 'Calzone',
+    'cheesecake': 'Cheesecake',
+    'chicken_piccata': 'Chicken Piccata',
+    'chicken_wings': 'Chicken Wings',
+    'cinnamon_roll': 'Cinnamon Roll',
+    'cobb_salad': 'Cobb Salad',
+    'coleslaw': 'Coleslaw',
+    'creamed_spinach': 'Creamed Spinach',
+    'donut': 'Donut',
+    'empanada': 'Empanada',
+    'french_fries': 'French Fries',
+    'frittata': 'Frittata',
+    'granola_bar': 'Granola Bar',
+    'grilled_cheese_sandwich': 'Grilled Cheese Sandwich',
+    'guacamole': 'Guacamole',
+    'ice_cream': 'Ice Cream',
+    'kebabs': 'Kebabs',
+    'key_lime_pie': 'Key Lime Pie',
+    'lasagne': 'Lasagne',
+    'macaroni_and_cheese': 'Macaroni and Cheese',
+    'margarita': 'Margarita',
+    'martini': 'Martini',
+    'mashed_potatoes': 'Mashed Potatoes',
+    'meatballs': 'Meatballs',
+    'meatloaf': 'Meatloaf',
+    'muffin': 'Muffin',
+    'nachos': 'Nachos',
+    'omelet': 'Omelet',
+    'pancakes': 'Pancakes',
+    'pizza': 'Pizza',
+    'popcorn': 'Popcorn',
+    'quesadilla': 'Quesadilla',
+    'salad': 'Salad',
+    'sloppy_joe': 'Sloppy Joe',
+    'smoothie': 'Smoothie',
+    'soup': 'Soup',
+    'spaghetti': 'Spaghetti',
+    'stuffed_pepper': 'Stuffed Pepper',
+    'waffles': 'Waffles',
+    'corn_dog': 'Corn Dog'
+}
+
+# the points to transform to 2d
 P = [
-    [1, 1],
-    [1, 3],
-    [3, 2],
-    [4, 3],
-    [4, 6],
-    [6, 2]
+    [ 4,   6,  1, -10,   0],
+    [ 1,   3,  1,  10,  10],
+    [ 3,   2,  1, -10,   2],
+    [ 1,   1,  1, -10,   3],
+    [ 4,   3,  0, -10,   0],
+    [ 6,   2,  0, -10,   0],
+    [ 10, 10,  0,  10,   0],
+    [ 10, 10,  0,  10, 100],
+    [  1,  2,  1,   9, 110],
+    [  2,  3,  2,   8, 120],
+    [  3,  4,  3,   7, 130],
+    [-10,-10,  0,  10, 100],
+    [ -1, -2,  1,   9, 110],
+    [ -2, -3,  2,   8, 120],
+    [ -3, -4,  3,   7, 130],
+    [ 10, 10, 10,  10,  10],
+    [ 11, 11, 11,  11,  11],
+    [ 12, 12, 12,  12,  12],
+    [ 13, 13, 13,  13,  13],
+    [ 10, 11, 12,  13,  14],
+    [ 15, 16, 17,  18,  19],
+    [ 20, 21, 22,  23,  24],
+    [ 25, 26, 27,  28,  29]
 ]
 
-P = [
-    [4,   6, 1, -10,  0],
-    [1,   3, 1,  10, 10],
-    [3,   2, 1, -10,  2],
-    [1,   1, 1, -10,  3],
-    [4,   3, 0, -10,  0],
-    [6,   2, 0, -10,  0],
-    [10, 10, 0,  10,  0]
-]
-
-P = [
-    [1, 1],
-    [2, 2],
-    [3, 3]
-]
-
+# print the given points
 print_points(P, 'Given points')
 
 # calculate the length array from given points above
@@ -379,5 +439,30 @@ P_calculated = calculate_points_from_lengths(lengths)
 # print the calculated points
 print_points(P_calculated, 'Calculated points')
 
-plt.scatter(*zip(*P_calculated))
+# set output size
+fig_size = plt.rcParams["figure.figsize"]
+fig_size[0] = 18
+fig_size[1] = 12
+plt.rcParams["figure.figsize"] = fig_size
+
+fig, ax = plt.subplots()
+
+keys = dict_translate_class.keys()
+
+for i in range(len(P_calculated)):
+    point = P_calculated[i]
+
+    marker_index = i % len(markers)
+    marker = markers[marker_index]
+
+    color_index = math.floor(i / len(markers))
+    color = colors[color_index]
+
+    label = dict_translate_class[list(keys)[i]]
+
+    ax.scatter(*point, color=color, marker=marker, alpha=0.5, s=100, edgecolors='none', label=label)
+
+ax.legend()
+ax.grid(True)
+
 plt.show()
