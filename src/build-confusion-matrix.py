@@ -1,17 +1,15 @@
 #!/usr/bin/env python
 
 import numpy as np
-import matplotlib
 import matplotlib.pyplot as plt
-import random
 import os
 import csv
 import pprint
 
 from matplotlib import cm, colors
-from random import randint
 from math import ceil, floor
 from __file import *
+from __classes import *
 
 # pretty printer
 pp = pprint.PrettyPrinter(indent=4)
@@ -36,7 +34,7 @@ validationSet = 'val'
 machine='gpu1060'
 
 # build the root path
-rootPath = '/media/bjoern/Daten/Development/classification/data/processed/{}/{}/{}/elements/{}'.format(
+rootPath = 'data/processed/{}/{}/{}/elements/{}'.format(
     category,
     dispersionType,
     dispersion,
@@ -47,59 +45,7 @@ rootPath = '/media/bjoern/Daten/Development/classification/data/processed/{}/{}/
 validated_files = search_files(os.path.join(rootPath, 'csv'), 'validated_*.csv')
 
 # translate dict: class name -> real name
-translateClass = {
-    'baked_beans': 'Baked Beans',
-    'baked_salmon': 'Baked Salmon',
-    'beef_stew': 'Beef Stew',
-    'beef_stroganoff': 'Beef Stroganoff',
-    'brownies': 'Brownies',
-    'bundt_cake': 'Bundt Cake',
-    'burger': 'Burger',
-    'burrito': 'Burrito',
-    'buttermilk_biscuits': 'Buttermilk Biscuits',
-    'caesar_salad': 'Caesar Salad',
-    'calzone': 'Calzone',
-    'cheesecake': 'Cheesecake',
-    'chicken_piccata': 'Chicken Piccata',
-    'chicken_wings': 'Chicken Wings',
-    'cinnamon_roll': 'Cinnamon Roll',
-    'cobb_salad': 'Cobb Salad',
-    'coleslaw': 'Coleslaw',
-    'creamed_spinach': 'Creamed Spinach',
-    'donut': 'Donut',
-    'empanada': 'Empanada',
-    'french_fries': 'French Fries',
-    'frittata': 'Frittata',
-    'granola_bar': 'Granola Bar',
-    'grilled_cheese_sandwich': 'Grilled Cheese Sandwich',
-    'guacamole': 'Guacamole',
-    'ice_cream': 'Ice Cream',
-    'kebabs': 'Kebabs',
-    'key_lime_pie': 'Key Lime Pie',
-    'lasagne': 'Lasagne',
-    'macaroni_and_cheese': 'Macaroni and Cheese',
-    'margarita': 'Margarita',
-    'martini': 'Martini',
-    'mashed_potatoes': 'Mashed Potatoes',
-    'meatballs': 'Meatballs',
-    'meatloaf': 'Meatloaf',
-    'muffin': 'Muffin',
-    'nachos': 'Nachos',
-    'omelet': 'Omelet',
-    'pancakes': 'Pancakes',
-    'pizza': 'Pizza',
-    'popcorn': 'Popcorn',
-    'quesadilla': 'Quesadilla',
-    'salad': 'Salad',
-    'sloppy_joe': 'Sloppy Joe',
-    'smoothie': 'Smoothie',
-    'soup': 'Soup',
-    'spaghetti': 'Spaghetti',
-    'stuffed_pepper': 'Stuffed Pepper',
-    'waffles': 'Waffles',
-    'corn_dog': 'Corn Dog'
-}
-
+translateClass = get_dict_translate_class()
 
 # calculate the hex value
 def getHex(r, g, b, f=0):
@@ -130,6 +76,7 @@ def get_id_of_given_label(label):
 def get_normalized_data(path_csv, numberClasses):
     data = np.zeros((numberClasses, numberClasses))
 
+    print('Load csv path: {}'.format(path_csv))
     with open(path_csv, 'r') as csvfile:
         plots = csv.reader(csvfile, delimiter=',')
         counter = 0
@@ -165,9 +112,12 @@ def get_normalized_data(path_csv, numberClasses):
                 else:
                     data[i, j] = data[i, j] / countClasses[i]
 
-    accuracy = 100 * correct_predicted / count_classes_all
+    if count_classes_all != 0:
+        accuracy = 100 * correct_predicted / count_classes_all
+    else:
+        accuracy = 0
 
-    return (data, countClasses, accuracy)
+    return data, countClasses, accuracy
 
 
 def get_class_names_with_number(class_names, count_classes, data):
@@ -221,6 +171,10 @@ def build_confusion_matrix(config, translate_class):
     ax.set_xticklabels(class_names)
     ax.set_yticklabels(class_names_with_number)
 
+    # set grid, so we can analyse the chart easily (set this grid below the text)
+    ax.grid(linestyle='-', linewidth=0.5, alpha=0.25, color=getHex(0, 0, 0))
+    ax.set_axisbelow(True)
+
     # Rotate the tick labels and set their alignment.
     plt.setp(
         ax.get_xticklabels(),
@@ -252,11 +206,10 @@ def build_confusion_matrix(config, translate_class):
     ax.set_title(title)
     fig.tight_layout()
 
-    return (plt, ax)
+    return plt, ax
 
 
 for validated_file in validated_files:
-    # get config from first validated file
     config = analyse_file_and_get_config(validated_file)
 
     # cancel if validated csv file does not exist
@@ -281,7 +234,6 @@ for validated_file in validated_files:
         print('Save document to {}'.format(path_png))
         plt.savefig(path_png)
 
-    ax.grid(linestyle='-', linewidth=0.5, color=getHex(200, 200, 200))
-
     if showPlot:
         plt.show()
+        exit()
