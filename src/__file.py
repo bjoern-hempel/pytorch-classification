@@ -62,7 +62,10 @@ def analyse_file_and_get_config(file):
         'model.model_best': ['models', 'model_best', 'pth'],
 
         'pdf.confusion_matrix_val': ['charts', 'confusion_matrix_val', 'pdf'],
-        'png.confusion_matrix_val': ['charts', 'confusion_matrix_val', 'png']
+        'png.confusion_matrix_val': ['charts', 'confusion_matrix_val', 'png'],
+
+        'pdf.mds': ['charts', 'mds', 'pdf'],
+        'png.mds': ['charts', 'mds', 'png']
     }
 
     config = {
