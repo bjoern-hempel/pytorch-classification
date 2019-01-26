@@ -2,7 +2,19 @@
 
 ## Structure of the data environment
 
+TODO
 
+## Prepare data
+
+TODO
+
+## Train model
+
+TODO
+
+## Create charts
+
+TODO
 
 ## A. Authors
 
