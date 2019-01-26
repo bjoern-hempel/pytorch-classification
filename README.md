@@ -31,6 +31,20 @@ This folder is used to save the calculated results, models and data. These data 
 
 ## Prepare data
 
+### Manage prepare folder
+
+#### Build ratio folders
+
+TODO
+
+#### Build binary data folders
+
+```shell
+user$ src/prepare-binary-data.py
+```
+
+### Prepare working environment (processed folder)
+
 TODO
 
 ## Train model
