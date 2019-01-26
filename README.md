@@ -2,6 +2,22 @@
 
 ## Structure of the data environment
 
+All data, models, data structures, charts, etc. are stored in the folder data in the main directory and have the following structure:
+
+* raw
+* prepared
+* processed
+
+### Raw
+
+TODO
+
+### Prepared
+
+TODO
+
+### Processed
+
 TODO
 
 ## Prepare data
