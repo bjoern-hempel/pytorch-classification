@@ -4,7 +4,7 @@ Framework to manage, prepare, train and evaluate models
 
 ## Structure of the data environment
 
-All data, models, data structures, charts, log/csv files etc. are stored in the folder data in the main directory and have the following structure:
+All data, models, data structures, charts, log/csv files etc. are stored in the folder data within the main directory and have the following structure:
 
 * raw
 * prepared
@@ -18,18 +18,18 @@ The raw folder contains the (original) data to be learned and validated. The str
 
 `/data/raw/[superclass]/[class]/[data-file]`
 
-* [superclass]: Superclass below which the classes to be learned are located
+* [superclass]: Superclass contains all classes that should be learned
 * [class]: The classes to be learned
 * [data-file]: The files to be learned
 
 ### Prepared
 
-The prepared folder contains the prepared data. Prepared data is structured for learning. The structuring can be, for example:
+The prepared folder contains the prepared data. Prepared data is structured for learning, whereas raw data is not. The structuring can be, for example:
 
-* ratio val/train data
-* unbalanced/balanced data
-* grouped classifiers
-* binary classifiers
+* ratio val/train data (e.g. 80% training / 20% validation data)
+* unbalanced/balanced data (the number of data within the classes is balanced or is not)
+* grouped classifiers (each group gets its own model)
+* binary classifiers (each class gets its own model - true/false model)
 
 To save storage space, the data in this order are merely linked to the raw data within the raw folder.
 
