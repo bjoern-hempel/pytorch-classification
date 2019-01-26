@@ -1,4 +1,6 @@
-# Framework to manage, prepare, train and evaluate models
+# Pytorch Classification
+
+Framework to manage, prepare, train and evaluate models
 
 ## Structure of the data environment
 
