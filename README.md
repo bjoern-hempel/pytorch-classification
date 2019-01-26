@@ -27,7 +27,7 @@ To save storage space, the data in this order are merely linked to the raw data 
 
 ### Processed
 
-This folder is used to save the calculated results, models and data.
+This folder is used to save the calculated results, models and data. These data and models are then used later for evaluation after the calculation.
 
 ## Prepare data
 
