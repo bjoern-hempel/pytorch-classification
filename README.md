@@ -35,7 +35,42 @@ TODO
 
 ## Train model
 
-TODO
+```shell
+bin/train \
+    --arch [the-model-to-be-used]* \
+    --epochs [number-of-epochs-to-be-learned] \
+    --learning-rate [learning-rate] \
+    --learning-rate-decrease-factor [learning-rate-decrease-factor] \
+    --learning-rate-decrease-after [learning-rate-decrease-after] \
+    --linear-layer [linear-layer] \
+    --pretrained \
+    --batch-size [batch-size] \
+    --session-name all \
+    --csv-path-settings [the-place-where-the-settings-should-be-written] \
+    --csv-path-summary [the-place-where-the-most-important-outputs-should-be-written] \
+    --csv-path-summary-full [the-place-where-all-outputs-should-be-written] \
+    --model-path [the-location-where-the-model-is-to-be-saved] \
+    --print-freq 1 \
+    [the-location-of-the-data-to-be-trained-and-validated]
+```
+
+Possible models are:
+
+* alexnet
+* vgg11
+* vgg11_bn
+* ...
+
+An overview of all usable models can be found here: https://pytorch.org/docs/stable/torchvision/models.html
+
+Parameter recommendations:
+
+* epochs: 21
+* learning-rate: 0.001
+* learning-rate-decrease-factor: 0.1
+* learning-rate-decrease-after: 7
+* linear-layer: The number of data to be classified
+* batch-size: Depending on the available memory for the GPU, the number of elements to be learned simultaneously (e.g. 8)
 
 ## Evaluate model
 
