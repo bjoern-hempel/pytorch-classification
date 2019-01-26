@@ -130,6 +130,10 @@ This command generates a CSV file with the result of the model's evaluation.
 
 ## Create charts
 
+### Learning success charts
+
+TODO
+
 ### Confusion matrix charts
 
 ```shell
