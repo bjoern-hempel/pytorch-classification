@@ -45,7 +45,7 @@ bin/train \
     --linear-layer [linear-layer] \
     --pretrained \
     --batch-size [batch-size] \
-    --session-name all \
+    --session-name [the-label-to-be-used-for-validations] \
     --csv-path-settings [the-place-where-the-settings-should-be-written] \
     --csv-path-summary [the-place-where-the-most-important-outputs-should-be-written] \
     --csv-path-summary-full [the-place-where-all-outputs-should-be-written] \
