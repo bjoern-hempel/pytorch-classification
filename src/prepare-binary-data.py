@@ -10,7 +10,7 @@ pp = pprint.PrettyPrinter(indent=4)
 # source path: {} => train/val
 source = 'data/prepared/food/unbalanced/90_10/all/{}'
 
-# {} => train/val; {} => class_name
+# {} => class_name; {} => train/val
 target = 'data/prepared/food/binary/unbalanced/90_10/all/{}/{}'
 
 
@@ -30,7 +30,7 @@ def prepare_data_folders(classes, path):
         for x in ['train', 'val']:
 
             # create true directory
-            dir_true = os.path.join(path.format(x, class_name), 'true')
+            dir_true = os.path.join(path.format(class_name, x), 'true')
             if not os.path.exists(dir_true):
                 print('Create "{}"'.format(dir_true))
                 os.makedirs(dir_true)
@@ -38,7 +38,7 @@ def prepare_data_folders(classes, path):
                 print('Target folder "{}" exists.'.format(dir_true))
 
             # create false directory
-            dir_false = os.path.join(path.format(x, class_name), 'false')
+            dir_false = os.path.join(path.format(class_name, x), 'false')
             if not os.path.exists(dir_false):
                 print('Create "{}"'.format(dir_false))
                 os.makedirs(dir_false)
@@ -71,11 +71,11 @@ class_names = collect_all_classes(source.format('train'))
 # create needed directories
 prepare_data_folders(class_names, target)
 
-
+# create all needed symlinks
 for class_name_1 in class_names:
     for x in ['train', 'val']:
-        write_dir_true = os.path.join(target.format(x, class_name_1), 'true')
-        write_dir_false = os.path.join(target.format(x, class_name_1), 'false')
+        write_dir_true = os.path.join(target.format(class_name_1, x), 'true')
+        write_dir_false = os.path.join(target.format(class_name_1, x), 'false')
 
         for class_name_2 in class_names:
 
