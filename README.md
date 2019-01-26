@@ -18,7 +18,7 @@ The raw folder contains the (original) data to be learned and validated. The str
 
 `/data/raw/[superclass]/[class]/[data-file]`
 
-* [superclass]: Superclass below which the classes to be learned are located
+* [superclass]: Superclass contains all classes that should be learned
 * [class]: The classes to be learned
 * [data-file]: The files to be learned
 
