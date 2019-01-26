@@ -79,8 +79,12 @@ user$ bin/train \
 Possible models are:
 
 * alexnet
-* vgg11
-* vgg11_bn
+* densenet121, densenet161, densenet169, densenet201
+* inception_v3
+* resnet101, resnet152
+* resnet18, resnet34, resnet50
+* squeezenet1_0, squeezenet1_1
+* vgg11, vgg11_bn, vgg13, vgg13_bn, vgg16, vgg16_bn, vgg19, vgg19_bn
 * ...
 
 An overview of all usable models can be found here: https://pytorch.org/docs/stable/torchvision/models.html
