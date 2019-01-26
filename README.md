@@ -36,7 +36,7 @@ TODO
 ## Train model
 
 ```shell
-bin/train \
+user$ bin/train \
     --arch [the-model-to-be-used]* \
     --epochs [number-of-epochs-to-be-learned] \
     --learning-rate [learning-rate] \
@@ -75,7 +75,7 @@ Parameter recommendations:
 ## Overview of already trained models
 
 ```shell
-src/evaluate-processed-data.py data/processed/food/unbalanced/90_10/elements/all -om pragmatic
+user$ src/evaluate-processed-data.py data/processed/food/unbalanced/90_10/elements/all -om pragmatic
 
 +---------------+--------+-------+-------+----+----+----+----+----------+------------+
 | model         | acc 1  | mc    | label | ep | te | be | bs | duration | size       |
@@ -99,7 +99,7 @@ src/evaluate-processed-data.py data/processed/food/unbalanced/90_10/elements/all
 ### Write evaluation csv
 
 ```shell
-bin/train \
+user$ bin/train \
     --evaluate \
     --csv-path-validated auto \
     --resume [path-to-the-model-to-be-validated] \
@@ -110,7 +110,17 @@ This command generates a CSV file with the result of the model's evaluation.
 
 ## Create charts
 
-TODO
+### Confusion matrix charts
+
+```shell
+user$ src/build-confusion-matrix.py
+```
+
+### MDS Charts
+
+```shell
+user$ src/build-mds-chart.py
+```
 
 ## A. Authors
 
