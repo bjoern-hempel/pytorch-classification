@@ -24,12 +24,12 @@ The raw folder contains the (original) data to be learned and validated. The str
 
 ### Prepared
 
-The prepared folder contains the prepared data. Prepared data is structured for learning. The structuring can be, for example:
+The prepared folder contains the prepared data. Prepared data is structured for learning, whereas raw data is not. The structuring can be, for example:
 
-* ratio val/train data
-* unbalanced/balanced data
-* grouped classifiers
-* binary classifiers
+* ratio val/train data (80% training / 20% validation data)
+* unbalanced/balanced data (the number of data within the classes is balanced or is not)
+* grouped classifiers (each group gets its own model)
+* binary classifiers (each class gets its own model - true/false model)
 
 To save storage space, the data in this order are merely linked to the raw data within the raw folder.
 
