@@ -10,15 +10,22 @@ All data, models, data structures, charts, log/csv files etc. are stored in the 
 
 ### Raw
 
-TODO
+The raw folder contains the (original) data to be learned and validated.
 
 ### Prepared
 
-TODO
+The prepared folder contains the prepared data. Prepared data is structured for learning. The structuring can be, for example:
+
+* ratio val/train data
+* unbalanced/balanced data
+* grouped classifiers
+* binary classifiers
+
+To save storage space, the data in this order are merely linked to the raw data within the raw folder.
 
 ### Processed
 
-TODO
+This folder is used to save the calculated results, models and data.
 
 ## Prepare data
 
