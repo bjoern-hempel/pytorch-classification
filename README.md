@@ -12,7 +12,13 @@ All data, models, data structures, charts, log/csv files etc. are stored in the 
 
 ### Raw
 
-The raw folder contains the (original) data to be learned and validated.
+The raw folder contains the (original) data to be learned and validated. The structure of the folder is as follows:
+
+`/data/raw/[superclass]/[class]/[data-file]`
+
+* [superclass]: Superclass below which the classes to be learned are located
+* [class]: The classes to be learned
+* [data-file]: The files to be learned
 
 ### Prepared
 
