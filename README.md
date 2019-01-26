@@ -10,6 +10,8 @@ All data, models, data structures, charts, log/csv files etc. are stored in the 
 * prepared
 * processed
 
+This folder and its subfolders must be created independently and are not part of this project.
+
 ### Raw
 
 The raw folder contains the (original) data to be learned and validated. The structure of the folder is as follows:
