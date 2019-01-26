@@ -1,4 +1,4 @@
-pa
+#!/usr/bin/env python
 
 """
 Build a 2D chart from given multidimensional input.
