@@ -2,7 +2,7 @@
 
 ## Structure of the data environment
 
-All data, models, data structures, charts, etc. are stored in the folder data in the main directory and have the following structure:
+All data, models, data structures, charts, log/csv files etc. are stored in the folder data in the main directory and have the following structure:
 
 * raw
 * prepared
