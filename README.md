@@ -39,7 +39,17 @@ TODO
 
 ## Evaluate model
 
-TODO
+### Write evaluation csv
+
+```shell
+bin/train \
+    --evaluate \
+    --csv-path-validated auto \
+    --resume [path-to-the-model-to-be-validated] \
+    [path-to-folder-with-data-to-be-validated]
+```
+
+This command generates a CSV file with the result of the model's evaluation.
 
 ## Create charts
 
