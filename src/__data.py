@@ -121,12 +121,44 @@ def get_data(path_to_csv):
     return data
 
 
+def get_folders(path, includes=[], excludes=[]):
+
+    assert(len(includes) > 0)
+
+    folders = []
+
+    # search within given paths for folders
+    for name in os.listdir(path):
+        full_path = os.path.join(path, name)
+
+        if not os.path.isdir(full_path):
+            continue
+
+        if name in excludes:
+            continue
+
+        if name in includes:
+            folders.append(full_path)
+            continue
+
+        for folder in get_folders(full_path, includes, excludes):
+            folders.append(folder)
+
+    return folders
+
+
 def get_datas_sorted_by(path, sortedBy='max_val_accuracy'):
 
     # collect all configs
     setting_files = []
-    for file in glob.iglob('{}/**/{}'.format(path, 'settings*.csv'), recursive=True):
-        setting_files.append(file)
+
+    # get all csv folders within given path
+    csv_folders = get_folders(path, ['csv'], ['data'])
+
+    # find all setting files
+    for csv_folder in csv_folders:
+        for file in glob.glob('{}/**/{}'.format(csv_folder, 'settings*.csv'), recursive=True):
+            setting_files.append(file)
 
     # collect all datas
     datas = []
