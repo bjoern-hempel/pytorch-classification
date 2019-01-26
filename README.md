@@ -72,6 +72,28 @@ Parameter recommendations:
 * linear-layer: The number of data to be classified
 * batch-size: Depending on the available memory for the GPU, the number of elements to be learned simultaneously (e.g. 8)
 
+## Overview of already trained models
+
+```shell
+src/evaluate-processed-data.py data/processed/food/unbalanced/90_10/elements/all -om pragmatic
+
++---------------+--------+-------+-------+----+----+----+----+----------+------------+
+| model         | acc 1  | mc    | label | ep | te | be | bs | duration | size       |
++---------------+--------+-------+-------+----+----+----+----+----------+------------+
+|   densenet201 | 86.27% | food  | all   | 90 | 90 | 86 |  8 | 10:00:10 |  140.01 MB |
+|     resnet152 | 82.64% | food  | all   | 21 | 21 | 17 |  4 | 03:50:24 |  445.19 MB |
+|   densenet201 | 82.17% | food  | all   | 21 | 21 | 21 |  4 | 03:22:56 |  140.01 MB |
+|         vgg19 | 80.75% | food  | all   | 21 | 21 | 21 |  8 | 02:43:09 | 1066.41 MB |
+|      resnet18 | 80.48% | food  | all   | 21 | 21 | 15 |  8 | 00:31:56 |   85.53 MB |
++---------------+--------+-------+-------+----+----+----+----+----------+------------+
+|      resnet18 | 79.88% | food  | all   | 21 | 21 | 18 | 16 | 00:24:58 |   85.53 MB |
+|         vgg16 | 79.41% | food  | all   | 21 | 21 | 15 |  8 | 02:27:01 | 1025.90 MB |
+|      resnet18 | 78.13% | food  | all   | 21 | 21 | 17 | 32 | 00:21:05 |   85.53 MB |
+| squeezenet1_0 | 71.40% | food  | all   | 21 | 21 | 19 |  8 | 00:21:16 |    5.83 MB |
+| squeezenet1_1 | 70.86% | food  | all   | 21 | 21 | 20 |  4 | 00:28:39 |    5.73 MB |
++---------------+--------+-------+-------+----+----+----+----+----------+------------+
+```
+
 ## Evaluate model
 
 ### Write evaluation csv
