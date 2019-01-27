@@ -46,6 +46,7 @@ test_iterations = 10000
 
 # some other configs
 probability_settings = {
+    # default (acc: 0.9868)
     'default': {
         'usage': [],
         'setting': {
@@ -53,15 +54,15 @@ probability_settings = {
             'sigma': 0.075
         }
     },
-    # use outlier for 2 classes
+    # use outlier for 2 classes (acc: 0.9748)
     'outlier-simple': {
         'usage': [2, 3],
         'setting': {
-            'mu': 1 / 3 + 0.01,
+            'mu': 1 / 3 + 0.02,
             'sigma': 0.075
         }
     },
-    # use outlier for 2 classes
+    # use outlier for 2 classes (acc: 0.8132)
     'outlier-big': {
         'usage': [4, 5],
         'setting': {
@@ -167,10 +168,10 @@ for name in probability_settings:
     else:
         print('{}:'.format(name))
 
-    print('μ  = {:.4f}'.format(probability_settings[name]['setting']['mu']))
-    print('σ  = {:.4f}'.format(probability_settings[name]['setting']['sigma']))
-    #print('σ² = {:.4f}'.format(probability_settings[name]['setting']['sigma']**2))
-    print('ac = {:.4f}%'.format(accuracy_class))
+    print('μ   = {:.4f}'.format(probability_settings[name]['setting']['mu']))
+    print('σ   = {:.4f}'.format(probability_settings[name]['setting']['sigma']))
+    print('σ²  = {:.4f}'.format(probability_settings[name]['setting']['sigma']**2))
+    print('acc = {:.4f}'.format(accuracy_class))
     print()
 
 # print predicted overview
