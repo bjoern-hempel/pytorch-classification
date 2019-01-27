@@ -9,7 +9,7 @@ Formula:
 
 p(x) = 1/(√(2·π·σ²))·e^(-((x - μ)²/(2·σ²)))
 
-Some configs and results:
+Some configs and results (for 50 classes):
 
 μ = 0.3333, σ = 0.0750  ⟶  0.9868  ⟶  0.9774
 μ = 0.3533, σ = 0.0750  ⟶  0.9748  ⟶  0.9320
