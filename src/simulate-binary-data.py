@@ -7,7 +7,8 @@ Uses a normally distributed random number generation via function "np.random.nor
 
 Formula:
 
-p(x) = 1/(√(2·π·σ²))·e^(-((x - μ)²/(2·σ²)))
+Probability density function (PDF): p(x) = 1/(√(2·π·σ²))·e^(-((x - μ)²/(2·σ²)))
+
 
 Some configs and results (for 50 classes):
 
