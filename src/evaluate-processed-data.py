@@ -34,7 +34,6 @@ __status__ = "Production"
 
 
 import pprint
-import sys
 import argparse
 
 from argparse import RawTextHelpFormatter
@@ -46,9 +45,9 @@ from __args import *
 fields = ['arch', 'epochs', 'batch_size', 'lr', 'weight_decay', 'momentum', 'linear_layer', 'workers']
 
 # fields that will be used for the evaluation output
-all_fields = ['arch', 'acc', 'acc5', 'main_class', 'label', 'epochs', 'trained_epochs', 'best_epoch',
+all_fields = ['arch', 'acc', 'acc5', 'main_class', 'class_name', 'label', 'epochs', 'trained_epochs', 'best_epoch',
               'batch_size', 'date', 'time_formated', 'model_size', 'log_version', 'device',
-              'validated_file_available', 'settings_name']
+              'validated_file_available', 'multi_model', 'settings_name']
 
 # some output modes
 output_modes = {
@@ -56,13 +55,18 @@ output_modes = {
         'fields': all_fields
     },
     'full': {
-        'fields': ['arch', 'acc', 'acc5', 'main_class', 'label', 'epochs', 'trained_epochs', 'best_epoch',
+        'fields': ['arch', 'acc', 'acc5', 'main_class', 'class_name', 'label', 'epochs', 'trained_epochs', 'best_epoch',
                    'batch_size', 'date', 'time_formated', 'model_size',
-                   'validated_file_available', 'settings_name_full']
+                   'validated_file_available', 'multi_model', 'settings_name_full']
     },
     'pragmatic': {
         'fields': ['arch', 'acc', 'main_class', 'label', 'epochs', 'trained_epochs', 'best_epoch',
                    'batch_size', 'time_formated', 'model_size']
+    },
+    'binary': {
+        'fields': ['arch', 'acc', 'main_class', 'class_name', 'epochs', 'trained_epochs', 'best_epoch',
+              'batch_size', 'date', 'time_formated', 'model_size', 'log_version', 'device',
+              'validated_file_available', 'multi_model', 'settings_name']
     }
 }
 

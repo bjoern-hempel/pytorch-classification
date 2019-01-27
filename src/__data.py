@@ -46,6 +46,8 @@ def get_data(path_to_csv):
     data['process_path'] = folders[0]
     data['property_path'] = folders[1]
 
+    properties = folders[1].split('/')
+
     basename = os.path.basename(path_to_csv)
 
     data['csv_path_settings'] = os.path.join(dirname, basename)
@@ -113,6 +115,8 @@ def get_data(path_to_csv):
     data['number_trained'] = number_trained
     data['best_epoch'] = best_epoch
     data['label'] = os.path.basename(data['process_path'])
+    data['class_name'] = properties[0] if len(properties) >= 4 else None
+    data['multi_model'] = True if len(properties) >= 4 else False
     data['main_class'] = data['process_path'].split('/')[2]
     data['time_start'] = datetime.utcfromtimestamp(
         int(creation_date(data['csv_path_settings']))
