@@ -41,8 +41,9 @@ pp = pprint.PrettyPrinter(indent=4)
 
 # some configs
 classes = 50
-correct_class = 0
-test_iterations = 10000
+correct_class = 10
+test_iterations_test = 10000
+test_iterations = 1000
 
 # some other configs
 probability_settings = {
@@ -125,18 +126,44 @@ def get_prediction_vector(probability_settings, classes, correct_class):
 
 def get_accuracy_overall(probability_settings, iterations, classes, correct_class):
     """Returns the accuracy of the predictions for given iterations (all classes)."""
-    predicted = 0
-    predicted_correct = 0
+    predicted_overall = 0
+    predicted_correct_overall = 0
 
-    for i in range(iterations):
-        prediction_vector = get_prediction_vector(probability_settings, classes, correct_class)
-        predicted_class = np.argmax(prediction_vector)
-        predicted += 1
+    accuracy = {}
+    accuracy_worst = 1
+    accuracy_best  = 0
+    accuracy_worst_id = None
+    accuracy_best_id = None
 
-        if predicted_class == correct_class:
-            predicted_correct += 1
+    for correct_class in range(classes):
+        predicted = 0
+        predicted_correct = 0
 
-    return predicted_correct / predicted
+        for j in range(iterations):
+            prediction_vector = get_prediction_vector(probability_settings, classes, correct_class)
+            predicted_class = np.argmax(prediction_vector)
+            predicted_overall += 1
+            predicted += 1
+
+            if predicted_class == correct_class:
+                predicted_correct_overall += 1
+                predicted_correct += 1
+
+        accuracy_current = predicted_correct / predicted
+
+        accuracy_best_id = correct_class if accuracy_current > accuracy_best else accuracy_best_id
+        accuracy_worst_id = correct_class if accuracy_current < accuracy_worst else accuracy_worst_id
+
+        accuracy_best = accuracy_current if accuracy_current > accuracy_best else accuracy_best
+        accuracy_worst = accuracy_current if accuracy_current < accuracy_worst else accuracy_worst
+
+        accuracy['class-{}'.format(correct_class)] = [correct_class, accuracy_current]
+
+    accuracy['worst'] = [accuracy_worst_id, accuracy_worst]
+    accuracy['best'] = [accuracy_best_id, accuracy_best]
+    accuracy['overall'] = [None, predicted_correct_overall / predicted_overall]
+
+    return accuracy
 
 
 def get_accuracy_class(probability_setting, iterations):
@@ -160,11 +187,11 @@ accuracy_overall = get_accuracy_overall(probability_settings, test_iterations, c
 
 # print probability settings
 for name in probability_settings:
-    accuracy_class = get_accuracy_class(probability_settings[name]['setting'], test_iterations)
+    accuracy_class = get_accuracy_class(probability_settings[name]['setting'], test_iterations_test)
     count = len(probability_settings[name]['usage'])
 
     if count > 0:
-        print('{} ({} classes):'.format(name, count))
+        print('{} (class {}):'.format(name, ', '.join(str(x) for x in probability_settings[name]['usage'])))
     else:
         print('{}:'.format(name))
 
@@ -175,10 +202,28 @@ for name in probability_settings:
     print()
 
 # print predicted overview
-print(
-    'Correct prediction overall ({} classes / {} iterations): {:.2f}%'.format(
-        classes,
-        test_iterations,
-        accuracy_overall * 100
-    )
-)
+for name in accuracy_overall:
+
+    # show only relevant results
+    if not name in ['overall', 'best', 'worst']:
+        continue
+
+    if name == 'overall':
+        print(
+            'Correct prediction {} ({} classes / {} iterations): {:.2f}%'.format(
+                name,
+                classes,
+                test_iterations,
+                accuracy_overall[name][1] * 100
+            )
+        )
+    else:
+        print(
+            'Correct prediction {} (class {} / {} iterations): {:.2f}%'.format(
+                name,
+                accuracy_overall[name][0],
+                test_iterations,
+                accuracy_overall[name][1] * 100
+            )
+        )
+
