@@ -43,8 +43,33 @@ pp = pprint.PrettyPrinter(indent=4)
 classes = 50
 correct_class = 0
 test_iterations = 10000
-mu = 1 / 3 + 0.1
-sigma = 0.075
+
+# some other configs
+probability_settings = {
+    'default': {
+        'usage': [],
+        'setting': {
+            'mu': 1 / 3 - 0.01,
+            'sigma': 0.075
+        }
+    },
+    # use outlier for 2 classes
+    'outlier-simple': {
+        'usage': [2, 3],
+        'setting': {
+            'mu': 1 / 3 + 0.01,
+            'sigma': 0.075
+        }
+    },
+    # use outlier for 2 classes
+    'outlier-big': {
+        'usage': [4, 5],
+        'setting': {
+            'mu': 1 / 3 + 0.1,
+            'sigma': 0.075
+        }
+    }
+}
 
 
 def softmax(x):
@@ -53,36 +78,57 @@ def softmax(x):
     return e_x / e_x.sum(axis=0)
 
 
-def get_prediction(mu, sigma, opposite):
+def get_settings(probability_settings, id):
+
+    setting = probability_settings['default']['setting']
+
+    for name in probability_settings:
+
+        if name == 'default':
+            continue
+
+        if id in probability_settings[name]['usage']:
+            return probability_settings[name]['setting']
+
+    return setting
+
+
+def get_prediction(probability_setting, opposite):
     """Returns a normally distributed random number."""
+
+    mu = probability_setting['mu']
+
     if opposite:
         mu = 1 - mu
 
-    return np.random.normal(mu, sigma)
+    return np.random.normal(mu, probability_setting['sigma'])
 
 
-def get_prediction_vector(mu, sigma, classes, correct_class):
+def get_prediction_vector(probability_settings, classes, correct_class):
     """Returns a prediction vector with one correct predicted class (randomly normal distributed)"""
     vector = []
 
-    for i in range(classes):
-        if i == correct_class:
-            prediction = get_prediction(mu, sigma, True)
+    for class_id in range(classes):
+
+        setting = get_settings(probability_settings, class_id)
+
+        if class_id == correct_class:
+            prediction = get_prediction(setting, True)
         else:
-            prediction = get_prediction(mu, sigma, False)
+            prediction = get_prediction(setting, False)
 
         vector.append(prediction)
 
     return softmax(vector)
 
 
-def get_accuracy_overall(mu, sigma, iterations, classes, correct_class):
+def get_accuracy_overall(probability_settings, iterations, classes, correct_class):
     """Returns the accuracy of the predictions for given iterations (all classes)."""
     predicted = 0
     predicted_correct = 0
 
     for i in range(iterations):
-        prediction_vector = get_prediction_vector(mu, sigma, classes, correct_class)
+        prediction_vector = get_prediction_vector(probability_settings, classes, correct_class)
         predicted_class = np.argmax(prediction_vector)
         predicted += 1
 
@@ -92,13 +138,13 @@ def get_accuracy_overall(mu, sigma, iterations, classes, correct_class):
     return predicted_correct / predicted
 
 
-def get_accuracy_class(mu, sigma, iterations):
+def get_accuracy_class(probability_setting, iterations):
     """Returns the accuracy for given iterations and one class."""
     counter_all = 0
     counter_true = 0
 
     for i in range(iterations):
-        prediction = get_prediction(mu, sigma, True)
+        prediction = get_prediction(probability_setting, True)
 
         counter_all += 1
 
@@ -109,20 +155,23 @@ def get_accuracy_class(mu, sigma, iterations):
 
 
 # calculate the accuracy
-accuracy_class = get_accuracy_class(mu, sigma, test_iterations)
-accuracy_overall = get_accuracy_overall(mu, sigma, test_iterations, classes, correct_class)
+accuracy_overall = get_accuracy_overall(probability_settings, test_iterations, classes, correct_class)
 
-print('μ  = {:.4f}'.format(mu))
-print('σ  = {:.4f}'.format(sigma))
-print('σ² = {:.4f}'.format(sigma**2))
-print()
+# print probability settings
+for name in probability_settings:
+    accuracy_class = get_accuracy_class(probability_settings[name]['setting'], test_iterations)
+    count = len(probability_settings[name]['usage'])
 
-# print predicted per class
-print(
-    'Correct prediction per class recognition (true/false detection): {:.2f}%'.format(
-        accuracy_class * 100
-    )
-)
+    if count > 0:
+        print('{} ({} classes):'.format(name, count))
+    else:
+        print('{}:'.format(name))
+
+    print('μ  = {:.4f}'.format(probability_settings[name]['setting']['mu']))
+    print('σ  = {:.4f}'.format(probability_settings[name]['setting']['sigma']))
+    #print('σ² = {:.4f}'.format(probability_settings[name]['setting']['sigma']**2))
+    print('ac = {:.4f}%'.format(accuracy_class))
+    print()
 
 # print predicted overview
 print(
