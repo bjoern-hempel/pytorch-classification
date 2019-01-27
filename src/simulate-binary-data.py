@@ -56,7 +56,7 @@ probability_settings = {
     },
     # use outlier for 2 classes (acc: 0.9748)
     'outlier-simple': {
-        'usage': [2, 3],
+        'usage': [2, 3, 4, 5],
         'setting': {
             'mu': 1 / 3 + 0.02,
             'sigma': 0.075
@@ -64,7 +64,7 @@ probability_settings = {
     },
     # use outlier for 2 classes (acc: 0.8132)
     'outlier-big': {
-        'usage': [4, 5],
+        'usage': [10, 11],
         'setting': {
             'mu': 1 / 3 + 0.1,
             'sigma': 0.075
