@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Starts a batch of bin/train commands for single class learning (binary classification).
+#
+# Usage: bin/train-binary [path-to-calculate] class1,class2,class3
+
 DIR="$(cd "$(dirname "$0")" && pwd)"
 
 # get path to learn
@@ -28,7 +32,7 @@ for class in $CLASSES; do
         --learning-rate-decrease-after 7 \
         --linear-layer 2 \
         --pretrained \
-        --batch-size 4 \
+        --batch-size 16 \
         --session-name all \
         --csv-path-settings $CSV_PATH/$class \
         --csv-path-summary $CSV_PATH/$class \
