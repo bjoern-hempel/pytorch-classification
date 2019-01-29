@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Simulates a binary classification network.
+Simulates a binary classification network (Monte Carlo method).
 
 Uses a normally distributed random number generation via function "np.random.normal".
 
