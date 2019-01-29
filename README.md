@@ -145,7 +145,10 @@ user$ src/evaluate-processed-data.py --help
 #### Example
 
 ```shell
-user$ src/evaluate-processed-data.py [path-to-folder-with-data-to-be-validated] -om binary --filter batch_size 16 --filter epochs 21
+user$ src/evaluate-processed-data.py [path-to-folder-with-data-to-be-validated]\
+    -om binary \
+    --filter batch_size 16 \
+    --filter epochs 21
 ```
 
 ## Create charts
