@@ -134,6 +134,20 @@ user$ bin/train \
 
 This command generates a CSV file with the result of the model's evaluation.
 
+### Show calculation results
+
+Use the following script to get an overview and the parameter `--help` to get information about it:
+
+```shell
+user$ src/evaluate-processed-data.py --help
+```
+
+#### Example
+
+```shell
+user$ src/evaluate-processed-data.py [path-to-folder-with-data-to-be-validated] -om binary --filter batch_size 16 --filter epochs 21
+```
+
 ## Create charts
 
 ### Learning success charts
