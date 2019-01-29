@@ -1,13 +1,17 @@
 import os
-import fnmatch
 import csv
 import glob
+import pprint
 
 from datetime import datetime
 from datetime import timezone
 
 from __helper import *
 from __file import *
+from __args import *
+
+# pretty printer
+pp = pprint.PrettyPrinter(indent=4)
 
 
 def convert_data(data):
@@ -151,28 +155,44 @@ def get_folders(path, includes=[], excludes=[]):
     return folders
 
 
-def get_datas_sorted_by(path, sortedBy='max_val_accuracy'):
+def get_datas_sorted_by(args, sortedBy='max_val_accuracy'):
 
     # collect all configs
     setting_files = []
 
     # get all csv folders within given path
-    csv_folders = get_folders(path, ['csv'], ['data'])
+    csv_folders = get_folders(args.path, ['csv'], ['data'])
 
     # find all setting files
     for csv_folder in csv_folders:
         for file in glob.glob('{}/**/{}'.format(csv_folder, 'settings*.csv'), recursive=True):
             setting_files.append(file)
 
+    # get filters
+    filters = get_filters(args)
+
     # collect all datas
     datas = []
     for setting_file in setting_files:
         data = get_data(setting_file)
+
+        filter_ok = True
+
+        for filter_arr in filters:
+            for name in filter_arr:
+                if name in data:
+                    if str(data[name]) != str(filter_arr[name]):
+                        filter_ok = False
+
+        if not filter_ok:
+            continue
+
         datas.append(data)
 
     # sort datas
     datas.sort(key=lambda x: x[sortedBy], reverse=True)
     return datas
+
 
 def get_data_grouped_by_point_of_interest(datas, fields, args):
     data_grouped = {}

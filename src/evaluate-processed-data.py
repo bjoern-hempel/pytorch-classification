@@ -33,8 +33,8 @@ __email__ = "bjoern@hempel.li"
 __status__ = "Production"
 
 
-import pprint
 import argparse
+import pprint
 
 from argparse import RawTextHelpFormatter
 from __print import *
@@ -88,6 +88,8 @@ parser.add_argument('-om', '--output-mode', default=None, type=str, metavar='OUT
                     help='The output mode set some  (default: None):\n・' + '\n・'.join(output_modes.keys()))
 parser.add_argument('-d', '--devider', default=5, type=int, metavar='DEVIDER',
                     help='The number after which the output is to be optically separated by a separator line. (default: 5)')
+parser.add_argument('--filter', default=[], type=str, action='append', nargs='*', metavar=('filter', 'value'),
+                    help='Filter the output with the given values.')
 
 # parse all arguments and do some args preparation
 args = prepare_args(parser.parse_args(), output_modes)
@@ -99,7 +101,7 @@ pp = pprint.PrettyPrinter(indent=4)
 check_point_of_interest(fields, args)
 
 # get datas and group them
-datas_grouped = get_data_grouped_by_point_of_interest(get_datas_sorted_by(args.path), fields, args)
+datas_grouped = get_data_grouped_by_point_of_interest(get_datas_sorted_by(args), fields, args)
 
 # print datas
 print_datas_grouped(fields, args, datas_grouped)
