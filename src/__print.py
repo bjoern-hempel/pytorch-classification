@@ -161,7 +161,7 @@ def print_data(fields, args, data, counter):
             acc=data['max_val_accuracy'],
             acc5=data['max_val_accuracy_5'],
             main_class=data['main_class'],
-            class_name=data['class_name'],
+            class_name='' if data['class_name'] is None else data['class_name'],
             label=data['label'],
             epochs=data['epochs'],
             trained_epochs=data['number_trained'],
@@ -173,7 +173,7 @@ def print_data(fields, args, data, counter):
             log_version=data['log_version'],
             device='gtx1060',
             validated_file_available='-' if data['csv_path_validated'] is None else 'x',
-            multi_model='-' if data['multi_model'] is None else 'x',
+            multi_model='-' if data['multi_model'] is False else 'x',
             settings_name=settings_name,
             settings_name_full=settings_name_full
         )

@@ -45,7 +45,7 @@ from __args import *
 fields = ['arch', 'epochs', 'batch_size', 'lr', 'weight_decay', 'momentum', 'linear_layer', 'workers']
 
 # fields that will be used for the evaluation output
-all_fields = ['arch', 'acc', 'acc5', 'main_class', 'class_name', 'label', 'epochs', 'trained_epochs', 'best_epoch',
+all_fields = ['arch', 'acc', 'acc5', 'main_class', 'label', 'epochs', 'trained_epochs', 'best_epoch',
               'batch_size', 'date', 'time_formated', 'model_size', 'log_version', 'device',
               'validated_file_available', 'multi_model', 'settings_name']
 
