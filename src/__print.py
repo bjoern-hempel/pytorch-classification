@@ -6,7 +6,7 @@ def get_columns():
     """Returns all columns and the width of them"""
 
     label_width = 5
-    class_name_width = 19
+    class_name_width = 23
 
     return {
         'arch': [13, '<13', '>13', None],
