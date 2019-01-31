@@ -1,10 +1,8 @@
 import csv
-import math
 import matplotlib.pyplot as plt
 
 from numpy import *
 from numpy.linalg import *
-from numpy.random import *
 
 
 def print_points(points, title = None):

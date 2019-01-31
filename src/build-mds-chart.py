@@ -24,10 +24,10 @@ __status__ = "Production"
 
 
 import pprint
+import mds_helper
+import file_helper
 
 from __classes import *
-from __mds import *
-from file_helper.__file import *
 
 
 # Configure the pretty printer
@@ -54,24 +54,24 @@ accuracy = 0.8627
 dict_translate_class = get_dict_translate_class()
 
 # get config
-config = analyse_file_and_get_config(csv_path)
+config = file_helper.analyse_file_and_get_config(csv_path)
 
 # get all class points (multidimensional)
-P = get_points_from_csv(csv_path, dict_translate_class)
+P = mds_helper.get_points_from_csv(csv_path, dict_translate_class)
 
 # print the given points
 if show_points:
-    print_points(P, 'Given points')
+    mds_helper.print_points(P, 'Given points')
 
 # get all class points (2-dimensional)
-P_2D = normalize_points(multidimensional_scaling(get_distances(P), 2))
+P_2D = mds_helper.normalize_points(mds_helper.multidimensional_scaling(mds_helper.get_distances(P), 2))
 
 # print the calculated points
 if show_points:
-    print_points(P_2D, 'Multidimensional scaled points')
+    mds_helper.print_points(P_2D, 'Multidimensional scaled points')
 
 # build the chart
-(plt, ax) = build_mds(P_2D, config, accuracy, dict_translate_class, markers)
+(plt, ax) = mds_helper.build_mds(P_2D, config, accuracy, dict_translate_class, markers)
 
 # build the pdf from chart
 if build_pdf:
