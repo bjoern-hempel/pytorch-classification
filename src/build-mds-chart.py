@@ -27,7 +27,7 @@ import pprint
 import mds_helper
 import file_helper
 
-from __classes import *
+from class_helper.__classes import *
 
 
 # Configure the pretty printer

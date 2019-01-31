@@ -3,12 +3,13 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import csv
+import os
 import pprint
+import file_helper
+import class_helper
 
 from matplotlib import colors
 from math import ceil
-from file_helper.__file import *
-from __classes import *
 
 # pretty printer
 pp = pprint.PrettyPrinter(indent=4)
@@ -41,10 +42,10 @@ rootPath = 'data/processed/{}/{}/{}/elements/{}'.format(
 )
 
 # get all validated files
-validated_files = search_files(os.path.join(rootPath, 'csv'), 'validated_*.csv')
+validated_files = file_helper.search_files(os.path.join(rootPath, 'csv'), 'validated_*.csv')
 
 # translate dict: class name -> real name
-translateClass = get_dict_translate_class()
+translateClass = class_helper.get_dict_translate_class()
 
 # calculate the hex value
 def getHex(r, g, b, f=0):
@@ -209,7 +210,7 @@ def build_confusion_matrix(config, translate_class):
 
 
 for validated_file in validated_files:
-    config = analyse_file_and_get_config(validated_file)
+    config = file_helper.analyse_file_and_get_config(validated_file)
 
     # cancel if validated csv file does not exist
     if not config['files']['csv.validated']['exists']:
@@ -222,14 +223,14 @@ for validated_file in validated_files:
     # save the diagram (pdf)
     if savePDF:
         path_pdf = config['files']['pdf.confusion_matrix_val']['path']
-        create_folder_for_file(path_pdf)
+        file_helper.create_folder_for_file(path_pdf)
         print('Save document to {}'.format(path_pdf))
         plt.savefig(path_pdf)
 
     # save the diagram (png)
     if savePNG:
         path_png = config['files']['png.confusion_matrix_val']['path']
-        create_folder_for_file(path_png)
+        file_helper.create_folder_for_file(path_png)
         print('Save document to {}'.format(path_png))
         plt.savefig(path_png)
 
