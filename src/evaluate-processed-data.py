@@ -35,11 +35,12 @@ __status__ = "Production"
 
 import argparse
 import pprint
+import data_helper
+import print_helper
+import args_helper
 
 from argparse import RawTextHelpFormatter
-from __print import *
-from __data import *
-from __args import *
+
 
 # fields that can be used for point of interest groupings
 fields = ['arch', 'epochs', 'batch_size', 'lr', 'weight_decay', 'momentum', 'linear_layer', 'workers']
@@ -92,16 +93,16 @@ parser.add_argument('--filter', default=[], type=str, action='append', nargs='*'
                     help='Filter the output with the given values.')
 
 # parse all arguments and do some args preparation
-args = prepare_args(parser.parse_args(), output_modes)
+args = args_helper.prepare_args(parser.parse_args(), output_modes)
 
 # pretty printer
 pp = pprint.PrettyPrinter(indent=4)
 
 # check point of interest
-check_point_of_interest(fields, args)
+args_helper.check_point_of_interest(fields, args)
 
 # get datas and group them
-datas_grouped = get_data_grouped_by_point_of_interest(get_datas_sorted_by(args), fields, args)
+datas_grouped = data_helper.get_data_grouped_by_point_of_interest(data_helper.get_datas_sorted_by(args), fields, args)
 
 # print datas
-print_datas_grouped(fields, args, datas_grouped)
+print_helper.print_datas_grouped(fields, args, datas_grouped)

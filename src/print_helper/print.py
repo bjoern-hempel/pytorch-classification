@@ -221,3 +221,7 @@ def print_datas_grouped(fields, args, datas_grouped):
         print_legend()
 
     print('')
+
+
+def test_test():
+    print('bla')

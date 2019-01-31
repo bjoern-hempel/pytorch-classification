@@ -17,7 +17,7 @@
 # --------------------------------------
 
 # excluded directories
-excluded=('.DS_Store' 'binary' 'models')
+excluded=('.DS_Store' 'binary')
 
 # config file
 config_file='.config-sync-to-remote'

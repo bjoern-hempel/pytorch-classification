@@ -2,13 +2,12 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-import os
 import csv
 import pprint
 
-from matplotlib import cm, colors
-from math import ceil, floor
-from __file import *
+from matplotlib import colors
+from math import ceil
+from file_helper.__file import *
 from __classes import *
 
 # pretty printer

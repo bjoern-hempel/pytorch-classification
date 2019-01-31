@@ -1,14 +1,13 @@
-import os
 import csv
-import glob
+import os
 import pprint
+import glob
+import args_helper
+import tools_helper
+import file_helper
 
 from datetime import datetime
 from datetime import timezone
-
-from __helper import *
-from __file import *
-from __args import *
 
 # pretty printer
 pp = pprint.PrettyPrinter(indent=4)
@@ -19,7 +18,7 @@ def convert_data(data):
         if data.isdigit():
             return int(data)
 
-        if isFloat(data):
+        if tools_helper.is_float(data):
             return float(data)
 
         if data == 'False':
@@ -110,7 +109,7 @@ def get_data(path_to_csv):
                 if row[5] == 'val':
                     max_val_accuracy_5 = row[9] if row[9] > max_val_accuracy_5 else max_val_accuracy_5
 
-    data['csv_path_validated'] = get_validated_path_from_model(data['model_path'], True)
+    data['csv_path_validated'] = tools_helper.get_validated_path_from_model(data['model_path'], True)
     data['time_taken'] = time_taken
     data['max_train_accuracy'] = max_train_accuracy
     data['max_val_accuracy'] = max_val_accuracy
@@ -123,7 +122,7 @@ def get_data(path_to_csv):
     data['multi_model'] = True if len(properties) >= 4 else False
     data['main_class'] = data['process_path'].split('/')[2]
     data['time_start'] = datetime.utcfromtimestamp(
-        int(creation_date(data['csv_path_settings']))
+        int(file_helper.creation_date(data['csv_path_settings']))
     ).replace(tzinfo=timezone.utc).astimezone(tz=None).strftime('%y-%m-%d %H:%M')
 
     return data
@@ -169,7 +168,7 @@ def get_datas_sorted_by(args, sortedBy='max_val_accuracy'):
             setting_files.append(file)
 
     # get filters
-    filters = get_filters(args)
+    filters = args_helper.get_filters(args)
 
     # collect all datas
     datas = []
