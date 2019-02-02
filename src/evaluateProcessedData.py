@@ -26,7 +26,7 @@ TODO: furthermore
 __author__ = "Björn Hempel"
 __copyright__ = "Copyright 2019, An ixnode project"
 __credits__ = ["Björn Hempel"]
-__license__ = "GPL"
+__license__ = "MIT"
 __version__ = "1.0.1"
 __maintainer__ = "Björn Hempel"
 __email__ = "bjoern@hempel.li"
@@ -37,30 +37,51 @@ import pprint
 import sys
 import argparse
 
+from argparse import RawTextHelpFormatter
 from __print import *
 from __data import *
 from __args import *
 
+# fields that can be used for point of interest groupings
+fields = ['arch', 'epochs', 'batch_size', 'lr', 'weight_decay', 'momentum', 'linear_layer', 'workers']
+
+# fields that will be used for the evaluation output
+all_fields = ['arch', 'acc', 'acc5', 'main_class', 'label', 'epochs', 'trained_epochs', 'best_epoch',
+              'batch_size', 'date', 'timeFormated', 'model_size', 'log_version', 'device',
+              'validated_file_available', 'settings_name']
+
+# some output modes
+output_modes = {
+    'default': {
+        'fields': all_fields
+    },
+    'pragmatic': {
+        'fields': ['arch', 'acc', 'main_class', 'label', 'epochs', 'trained_epochs', 'best_epoch',
+                   'batch_size', 'timeFormated', 'model_size']
+    }
+}
+
 # create the argument parser
-parser = argparse.ArgumentParser(description='ImageNet Training Evaluation')
+parser = argparse.ArgumentParser(description='ImageNet Training Evaluation', formatter_class=RawTextHelpFormatter)
 
 # add all arguments to parser
 parser.add_argument('path',
-    help='Path to find the setting csv files', metavar='PATH')
+                    help='Path to find the setting csv files', metavar='PATH')
+parser.add_argument('-f', '--fields', default=','.join(all_fields), type=str, metavar='FIELDS',
+                    help='The name of fields, that should be printed in evaluation mode:\n・' + '\n・'.join(all_fields))
 parser.add_argument('-p', '--point-of-interest', default=None, type=str, metavar='POINT_OF_INTEREST',
-    help='Group the output by point of interest (default: None)')
+                    help='Group the output by point of interest (default: None)')
 parser.add_argument('-o', '--order-by', default='acc', type=str, metavar='ORDER_BY',
-    help='Group the output by point of interest (default: acc)')
+                    help='Group the output by point of interest (default: acc)')
 parser.add_argument('-s', '--show-legend', action='store_true',
-    help='Show legend if given')
+                    help='Show legend if given')
+parser.add_argument('-om', '--output-mode', default=None, type=str, metavar='OUTPUT_MODE',
+                    help='The output mode set some  (default: None):\n・' + '\n・'.join(output_modes.keys()))
 parser.add_argument('-d', '--devider', default=5, type=int, metavar='DEVIDER',
-    help='The number after which the output is to be optically separated by a separator line. (default: 5)')
+                    help='The number after which the output is to be optically separated by a separator line. (default: 5)')
 
-# parse all arguments
-args = parser.parse_args()
-
-# fields that can be grouped by
-fields = ['arch', 'epochs', 'batch_size', 'lr', 'weight_decay', 'momentum', 'linear_layer', 'workers']
+# parse all arguments and do some args preparation
+args = prepare_args(parser.parse_args(), output_modes)
 
 # pretty printer
 pp = pprint.PrettyPrinter(indent=4)
