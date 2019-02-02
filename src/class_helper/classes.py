@@ -1,0 +1,60 @@
+def get_dict_translate_class():
+    # the class names
+    dict_translate_class_tmp = {
+        'baked_beans': 'Baked Beans',
+        'baked_salmon': 'Baked Salmon',
+        'beef_stew': 'Beef Stew',
+        'beef_stroganoff': 'Beef Stroganoff',
+        'brownies': 'Brownies',
+        'bundt_cake': 'Bundt Cake',
+        'burger': 'Burger',
+        'burrito': 'Burrito',
+        'buttermilk_biscuits': 'Buttermilk Biscuits',
+        'caesar_salad': 'Caesar Salad',
+        'calzone': 'Calzone',
+        'cheesecake': 'Cheesecake',
+        'chicken_piccata': 'Chicken Piccata',
+        'chicken_wings': 'Chicken Wings',
+        'cinnamon_roll': 'Cinnamon Roll',
+        'cobb_salad': 'Cobb Salad',
+        'coleslaw': 'Coleslaw',
+        'creamed_spinach': 'Creamed Spinach',
+        'donut': 'Donut',
+        'empanada': 'Empanada',
+        'french_fries': 'French Fries',
+        'frittata': 'Frittata',
+        'granola_bar': 'Granola Bar',
+        'grilled_cheese_sandwich': 'Grilled Cheese Sandwich',
+        'guacamole': 'Guacamole',
+        'ice_cream': 'Ice Cream',
+        'kebabs': 'Kebabs',
+        'key_lime_pie': 'Key Lime Pie',
+        'lasagne': 'Lasagne',
+        'macaroni_and_cheese': 'Macaroni and Cheese',
+        'margarita': 'Margarita',
+        'martini': 'Martini',
+        'mashed_potatoes': 'Mashed Potatoes',
+        'meatballs': 'Meatballs',
+        'meatloaf': 'Meatloaf',
+        'muffin': 'Muffin',
+        'nachos': 'Nachos',
+        'omelet': 'Omelet',
+        'pancakes': 'Pancakes',
+        'pizza': 'Pizza',
+        'popcorn': 'Popcorn',
+        'quesadilla': 'Quesadilla',
+        'salad': 'Salad',
+        'sloppy_joe': 'Sloppy Joe',
+        'smoothie': 'Smoothie',
+        'soup': 'Soup',
+        'spaghetti': 'Spaghetti',
+        'stuffed_pepper': 'Stuffed Pepper',
+        'waffles': 'Waffles',
+        'corn_dog': 'Corn Dog'
+    }
+
+    dict_translate_class = {}
+    for key, val in sorted(dict_translate_class_tmp.items()):
+        dict_translate_class[key] = val
+
+    return dict_translate_class

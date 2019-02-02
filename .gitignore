@@ -1,4 +1,4 @@
 data/
 .idea/
 __pycache__/
-
+bin/.config-sync-to-remote

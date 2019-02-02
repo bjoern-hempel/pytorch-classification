@@ -1,0 +1,51 @@
+#!/bin/bash
+
+# A script to transfer all data to given remote host.
+#
+# @author Björn Hempel <bjoern@hempel.li>
+# @version 1.0 (2019-01-31)
+#
+# First create a config file named '.config-sync-to-remote':
+#
+# --------------------------------------
+# username='username'
+# host='hostname'
+# port='22'
+# path_destination='destination path'
+# path_source='source path'
+# path_folder=''
+# --------------------------------------
+
+# excluded directories
+excluded=('.DS_Store' 'binary')
+
+# config file
+config_file='.config-sync-to-remote'
+
+# get current directory
+DIR="$(cd "$(dirname "$0")" && pwd)"
+
+# add --excluded parameter name
+for i in "${!excluded[@]}"; do
+    excluded[$i]="--exclude=${excluded[$i]}"
+done
+
+# build excluded parameter
+excluded_parameter=$(IFS=' ' ; echo "${excluded[*]}")
+
+# read config file if exists
+if test -f "$DIR/${config_file}"; then
+  . "$DIR/${config_file}"
+else
+    echo "Config file '$config_file' was not found." && exit 1
+fi
+
+# sync data folder to hidrive
+# --delete
+rsync \
+    -K \
+    $excluded_parameter \
+    -avzre \
+    "ssh -p $port" \
+    "$DIR/../$path_source$path_folder" \
+    $username@$host:$path_destination$path_folder/.

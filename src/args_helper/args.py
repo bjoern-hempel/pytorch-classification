@@ -8,6 +8,7 @@ def check_point_of_interest(fields, args):
             print('Allowed fields: "{}"'.format('", "'.join(fields)))
             exit()
 
+
 def prepare_args(args, output_modes):
     args.fields = args.fields.split(',')
 
@@ -16,3 +17,15 @@ def prepare_args(args, output_modes):
 
     return args
 
+
+def get_filters(args):
+    filters = []
+    for filter_arr in args.filter:
+        if len(filter_arr) == 1:
+            filter_arr = filter_arr[0].split('=')
+
+        if len(filter_arr) == 2:
+            filters.append({filter_arr[0]: filter_arr[1]})
+            continue
+
+    return filters

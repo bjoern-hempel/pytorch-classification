@@ -3,7 +3,7 @@ import glob
 import re
 
 
-def isFloat(x):
+def is_float(x):
     try:
         float(x)
         return True

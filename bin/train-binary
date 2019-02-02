@@ -1,0 +1,43 @@
+#!/bin/bash
+
+# Starts a batch of bin/train commands for single class learning (binary classification).
+#
+# Usage: bin/train-binary [path-to-calculate] class1,class2,class3
+
+DIR="$(cd "$(dirname "$0")" && pwd)"
+
+# get path to learn
+CALCULATION_PATH="$1"
+
+# get classes
+CLASSES="$2"
+
+# calculate root path
+ROOT_PATH=$(dirname "$CALCULATION_PATH")
+
+# calculate csv path
+CSV_PATH="$ROOT_PATH/csv"
+
+# calculate model path
+MODEL_PATH="$ROOT_PATH/models"
+
+# iterate through all given classes
+export IFS=','
+for class in $CLASSES; do
+    bin/train \
+        --arch resnet152 \
+        --epochs 21 \
+        --learning-rate 0.001 \
+        --learning-rate-decrease-factor 0.1 \
+        --learning-rate-decrease-after 7 \
+        --linear-layer 2 \
+        --pretrained \
+        --batch-size 16 \
+        --session-name all \
+        --csv-path-settings $CSV_PATH/$class \
+        --csv-path-summary $CSV_PATH/$class \
+        --csv-path-summary-full $CSV_PATH/$class \
+        --model-path $MODEL_PATH/$class \
+        --print-freq 1 \
+        $CALCULATION_PATH/$class
+done
