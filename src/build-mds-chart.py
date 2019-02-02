@@ -26,8 +26,7 @@ __status__ = "Production"
 import pprint
 import mds_helper
 import file_helper
-
-from class_helper.__classes import *
+import class_helper
 
 
 # Configure the pretty printer
@@ -47,11 +46,11 @@ increase_output = True
 show_points = False
 
 # path to csv
-csv_path = 'data/processed/food/unbalanced/90_10/elements/all/csv/densenet201/224x224/gpu1060/validated_lr0.001_m0.9_bs8_w4_wd0.0001_p.20190112_011853.20190120_212304.csv'
+csv_path = 'data/processed/food/unbalanced/90_10/elements/all/csv/densenet201/224x224/gpu1060/validated_lr0.001_m0.9_bs8_w4_wd0.0001_p.20190110_135102.csv'
 accuracy = 0.8627
 
 # get dict from all classes
-dict_translate_class = get_dict_translate_class()
+dict_translate_class = class_helper.get_dict_translate_class()
 
 # get config
 config = file_helper.analyse_file_and_get_config(csv_path)

@@ -35,6 +35,7 @@ __status__ = "Production"
 
 import argparse
 import pprint
+import os
 import data_helper
 import print_helper
 import args_helper
@@ -68,6 +69,12 @@ output_modes = {
         'fields': ['arch', 'acc', 'main_class', 'class_name', 'epochs', 'trained_epochs', 'best_epoch',
               'batch_size', 'date', 'time_formated', 'model_size', 'log_version', 'device',
               'validated_file_available', 'multi_model', 'settings_name']
+    },
+    'setting_files': {
+        'fields': ['settings_name_full']
+    },
+    'model_paths': {
+        'fields': ['model_path']
     }
 }
 
@@ -103,6 +110,24 @@ args_helper.check_point_of_interest(fields, args)
 
 # get datas and group them
 datas_grouped = data_helper.get_data_grouped_by_point_of_interest(data_helper.get_datas_sorted_by(args), fields, args)
+
+# special output for model_paths
+if args.output_mode == 'model_paths':
+    for data_grouped in datas_grouped['all']:
+        model_path = data_grouped['model_path']
+        paths = model_path.split('/models/')
+        model_paths = paths[1].split('/')
+        class_name = model_paths[0]
+        data_dir = os.path.join(paths[0], 'data', class_name)
+
+        print('bin/train \\')
+        print('    --evaluate \\')
+        print('    --csv-path-validated auto \\')
+        print('    --resume {} \\'.format(model_path))
+        print('    {}'.format(data_dir))
+        print()
+
+    exit()
 
 # print datas
 print_helper.print_datas_grouped(fields, args, datas_grouped)

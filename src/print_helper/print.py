@@ -27,7 +27,8 @@ def get_columns():
         'validated_file_available': [1, '<1', '<1', None],
         'multi_model': [1, '<1', '<1', None],
         'settings_name': [22, '<22', '<22', None],
-        'settings_name_full': [100, '<100', '<100', None]
+        'settings_name_full': [120, '<120', '<120', None],
+        'model_path': [180, '<180', '<180', None]
     }
 
 
@@ -129,7 +130,8 @@ def print_header(fields, args, data=None):
             validated_file_available='v',
             multi_model='m',
             settings_name='settings file name',
-            settings_name_full='settings file name'
+            settings_name_full='settings file name',
+            model_path='model_path'
         )
     )
     print(get_line(args))
@@ -175,7 +177,8 @@ def print_data(fields, args, data, counter):
             validated_file_available='-' if data['csv_path_validated'] is None else 'x',
             multi_model='-' if data['multi_model'] is False else 'x',
             settings_name=settings_name,
-            settings_name_full=settings_name_full
+            settings_name_full=settings_name_full,
+            model_path=data['model_path']
         )
     )
 
