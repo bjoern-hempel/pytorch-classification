@@ -1,6 +1,7 @@
 import os
 import glob
 import re
+import numpy as np
 
 
 def is_float(x):
@@ -61,3 +62,9 @@ def get_validated_path_from_model(path_model, check=False):
         return None
 
     return file_csv_validated
+
+
+def softmax(x):
+    """A softmax implementation."""
+    e_x = np.exp(x - np.max(x))
+    return e_x / e_x.sum(axis=0)

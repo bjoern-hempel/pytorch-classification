@@ -34,6 +34,15 @@ def search_files(path, name):
 
     return files
 
+
+def get_class_name_from_config_file(path):
+    """Extracts the class name from given path."""
+    paths = path.split('/csv/')
+    splitted_paths = paths[1].split('/')
+    class_name = splitted_paths[0]
+
+    return class_name
+
 def analyse_file_and_get_config(file):
 
     # build file template
