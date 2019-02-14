@@ -76,21 +76,3 @@ for class_name in data_val_values:
         print('{}) Predicted current: {:.2f}%'.format(counter_all, counter_correct / counter_all * 100))
 
 print('Predicted overall: {:.2f}%'.format(counter_correct / counter_all * 100))
-
-#result = ml_helper.k_nearest_neighbors(data_train_values, data_train_values['baked_salmon'][0], 51)
-
-#print(result)
-
-
-exit()
-
-dataset = {
-    'k': [[1, 2, 3, 5], [1, 2, 3, 4], [2, 3, 4, 5], [3, 1, 5, 6]],
-    'r': [[6, 5, 3, 6], [7, 7, 4, 7], [8, 6, 5, 8]]
-}
-
-new_features = [1, 2, 3, 4]
-
-result = ml_helper.k_nearest_neighbors(dataset, new_features, 5)
-
-print(result)

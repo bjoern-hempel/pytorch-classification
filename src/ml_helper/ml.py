@@ -5,7 +5,22 @@ from collections import Counter
 
 
 def k_nearest_neighbors(data, predict, k=3):
-    """A KNN implementation."""
+    """A KNN implementation.
+
+    Usage:
+
+    dataset = {
+        'k': [[1, 2, 3, 5], [1, 2, 3, 4], [2, 3, 4, 5], [3, 1, 5, 6]],
+        'r': [[6, 5, 3, 6], [7, 7, 4, 7], [8, 6, 5, 8]]
+    }
+    
+    new_features = [1, 2, 3, 4]
+
+    result = ml_helper.k_nearest_neighbors(dataset, new_features, 5)
+
+    print(result)
+
+    """
     if len(data) >= k:
         warnings.warn('K is set to a value less than total voting groups ({}, {})!'.format(len(data), k))
 
